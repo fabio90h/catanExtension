@@ -1,29 +1,23 @@
-import logo from "./logo.svg";
+import React from "react";
 import "./App.css";
-import * as AssetsService from "./services/assets-service";
+import { reducer } from "./reducer";
+import { findTranscription } from "./scripts";
 
 function App() {
+  const [foundTranscription, setFoundTranscription] = React.useState(false);
+
+  const [usersData, dispatch] = React.useReducer(reducer, {});
+
+  React.useEffect(() => {
+    findTranscription(setFoundTranscription, dispatch);
+  }, []);
+
+  React.useEffect(() => {
+    console.log("usersData", usersData);
+  }, [usersData]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img
-          src={AssetsService.getResourceURL(logo)}
-          className="App-logo"
-          alt="logo"
-        />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <div className="App">{foundTranscription && <div>Hello World</div>}</div>
   );
 }
 
