@@ -31,11 +31,6 @@ const recognizeUsers = (
       .split(" ")[0];
 
     const images = collectionToArray(node.getElementsByTagName("img"));
-    // const startingResources: string[] = [];
-    // images.forEach((img) => {
-    //   const imageData = imageDataConverter(img.src);
-    //   if (imageData) startingResources.push(imageData);
-    // });
 
     const startingResources = images.reduce<ResourceType[]>((acc, img) => {
       const imageData = imageDataConverter(img.src);
@@ -49,6 +44,12 @@ const recognizeUsers = (
     });
   }
 };
+
+// First, delete the ad
+function deleteAd() {
+  const ad = document.querySelector(".main_container_block_ads_included");
+  ad?.remove();
+}
 
 // export const loadCounter = () => {
 //   setTimeout(() => {
@@ -81,6 +82,7 @@ export const waitForInitialPlacement = (
         });
 
         if (initialPlacementDone) {
+          deleteAd();
           // loadCounter();
           observer.disconnect();
         }

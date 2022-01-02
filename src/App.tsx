@@ -1,5 +1,6 @@
 import React from "react";
 import "./App.css";
+import Table from "./components/Table";
 import { reducer } from "./reducer";
 import { findTranscription } from "./scripts";
 
@@ -7,6 +8,7 @@ function App() {
   const [foundTranscription, setFoundTranscription] = React.useState(false);
 
   const [usersData, dispatch] = React.useReducer(reducer, {});
+  console.log("usersData", usersData);
 
   React.useEffect(() => {
     findTranscription(setFoundTranscription, dispatch);
@@ -17,7 +19,9 @@ function App() {
   }, [usersData]);
 
   return (
-    <div className="App">{foundTranscription && <div>Hello World</div>}</div>
+    <div>
+      <Table usersData={usersData} />
+    </div>
   );
 }
 

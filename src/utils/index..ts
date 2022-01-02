@@ -14,3 +14,9 @@ export const imageDataConverter = (imageData: string) => {
   else if (imageData.includes(keywords.stone)) return ResourceType.STONE;
   else if (imageData.includes(keywords.sheep)) return ResourceType.SHEEP;
 };
+
+export const getImg = (imgType: string) => {
+  const imgName = keywords[imgType];
+  if (!imgName.length) throw Error("Couldn't find resource image icon");
+  return `https://colonist.io/dist/images/${imgName}.svg`;
+};

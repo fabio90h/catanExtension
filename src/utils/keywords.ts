@@ -39,6 +39,7 @@ export default {
   stoleFromSnippet: " stole   from: ", // extra space from icon
 
   //Resource
+  unknown: "card_rescardback",
   wood: "card_lumber",
   stone: "card_ore",
   wheat: "card_grain",
