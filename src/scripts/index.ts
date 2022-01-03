@@ -1,49 +1,6 @@
-import { Action, ActionType } from "../reducer";
-import { ResourceType } from "../types";
-import { collectionToArray, imageDataConverter } from "../utils/index.";
+import { Action } from "../reducer";
 import keywords from "../utils/keywords";
-
-/**
- * Log initial resource distributions.
- */
-// function tallyInitialResources() {
-//   var allMessages = getAllMessages();
-//   allMessages.forEach(parseGotMessage);
-//   deleteAd();
-//   render();
-//   startWatchingMessages();
-// }
-
-/**
- * Once initial settlements are placed, determine the players.
- */
-const recognizeUsers = (
-  node: HTMLElement,
-  dispatch: React.Dispatch<Action>
-) => {
-  if (!node.textContent?.includes(keywords.placeInitialSettlementSnippet))
-    return;
-  if (node.textContent) {
-    console.log("recognizeUsers", node);
-
-    const player = node.textContent
-      .replace(keywords.placeInitialSettlementSnippet, "")
-      .split(" ")[0];
-
-    const images = collectionToArray(node.getElementsByTagName("img"));
-
-    const startingResources = images.reduce<ResourceType[]>((acc, img) => {
-      const imageData = imageDataConverter(img.src);
-      if (imageData) return [...acc, imageData];
-      return acc;
-    }, []);
-
-    dispatch({
-      type: ActionType.INITIALIZE_USER,
-      payload: { user: player, color: node.style.color, startingResources },
-    });
-  }
-};
+import { parseGot, recognizeUsers } from "./actionParser";
 
 // First, delete the ad
 function deleteAd() {
@@ -51,17 +8,10 @@ function deleteAd() {
   ad?.remove();
 }
 
-// export const loadCounter = () => {
-//   setTimeout(() => {
-//     recognizeUsers();
-//     tallyInitialResources();
-//   }, 500); // wait for inital resource distribution to be logged
-// }
-
 /**
  * Wait for players to place initial settlements so we can determine who the players are.
  */
-export const waitForInitialPlacement = (
+export const watchLog = (
   logElement: HTMLElement,
   dispatch: React.Dispatch<Action>
 ) => {
@@ -71,21 +21,36 @@ export const waitForInitialPlacement = (
 
   // Callback function to execute when mutations are observed
   const callback: MutationCallback = function (mutationsList, observer) {
-    console.log("waitForInitialPlacement");
     for (const mutation of mutationsList) {
       if (mutation.type === "childList") {
         mutation.addedNodes.forEach((node) => {
-          recognizeUsers(node as HTMLElement, dispatch);
-          initialPlacementDone =
-            node.textContent?.includes(keywords.initialPlacementDoneMessage) ||
-            false;
+          // Get initial resources and players
+          if (!initialPlacementDone) {
+            recognizeUsers(node as HTMLElement, dispatch);
+            initialPlacementDone =
+              node.textContent?.includes(
+                keywords.initialPlacementDoneMessage
+              ) || false;
+          }
+          // Check for incoming logs after placement
+          else {
+            parseGot(node as HTMLElement, dispatch);
+            /**
+             * parseGotMessage,
+             * 
+                parseBuiltMessage,
+                parseBoughtMessage,
+                parseTradeBankMessage,
+                parseYearofPlenty,
+                parseStoleAllOfMessage,
+                parseDiscardedMessage,
+                parseTradedMessage,
+                parseStoleFromYouMessage,
+                parseStoleUnknownMessage,
+                reviewTheft
+             */
+          }
         });
-
-        if (initialPlacementDone) {
-          deleteAd();
-          // loadCounter();
-          observer.disconnect();
-        }
       }
     }
   };
@@ -100,16 +65,13 @@ export const waitForInitialPlacement = (
 /**
  * Find the transcription.
  */
-export const findTranscription = (
-  setFoundTranscription: (value: React.SetStateAction<boolean>) => void,
-  dispatch: React.Dispatch<Action>
-) => {
+export const findTranscription = (dispatch: React.Dispatch<Action>) => {
   let logElement;
   let interval = setInterval(() => {
     if (logElement) {
       clearInterval(interval);
-      setFoundTranscription(true);
-      waitForInitialPlacement(logElement, dispatch);
+      watchLog(logElement, dispatch);
+      deleteAd();
     } else {
       logElement = document.getElementById("game-log-text");
     }

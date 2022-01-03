@@ -5,13 +5,10 @@ import { reducer } from "./reducer";
 import { findTranscription } from "./scripts";
 
 function App() {
-  const [foundTranscription, setFoundTranscription] = React.useState(false);
-
   const [usersData, dispatch] = React.useReducer(reducer, {});
-  console.log("usersData", usersData);
 
   React.useEffect(() => {
-    findTranscription(setFoundTranscription, dispatch);
+    findTranscription(dispatch);
   }, []);
 
   React.useEffect(() => {

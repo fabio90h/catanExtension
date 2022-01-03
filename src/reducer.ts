@@ -1,5 +1,6 @@
 import React from "react";
 import { ResourceType, Users } from "./types";
+import { checkForUserExistance } from "./utils/index.";
 
 export enum ActionType {
   ADD_RESOURCE = "ADD_RESOURCE",
@@ -18,11 +19,11 @@ export type Action =
     }
   | {
       type: ActionType.ADD_RESOURCE;
-      payload: { user: string; resourceType: ResourceType };
+      payload: { user: string; addResources: ResourceType[] };
     }
   | {
       type: ActionType.SUBTRACT_RESOURCE;
-      payload: { user: string; resourceType: ResourceType };
+      payload: { user: string; subtractResources: ResourceType[] };
     };
 
 export const reducer: React.Reducer<Users, Action> = (state, action) => {
@@ -47,24 +48,38 @@ export const reducer: React.Reducer<Users, Action> = (state, action) => {
       };
     }
     case ActionType.ADD_RESOURCE: {
+      checkForUserExistance(action.payload.user, state);
+
+      const tempResource = { ...state[action.payload.user].resources };
+      const tempConfig = { ...state[action.payload.user].config };
+
+      action.payload.addResources.forEach(
+        (resource) => (tempResource[resource] += 1)
+      );
+
       return {
         ...state,
         [action.payload.user]: {
-          ...state[action.payload.user],
-          [action.payload.resourceType]:
-            state[action.payload.user].resources[action.payload.resourceType] +
-              1 || 0,
+          resources: tempResource,
+          config: tempConfig,
         },
       };
     }
     case ActionType.SUBTRACT_RESOURCE: {
+      checkForUserExistance(action.payload.user, state);
+
+      const tempResource = { ...state[action.payload.user].resources };
+      const tempConfig = { ...state[action.payload.user].config };
+
+      action.payload.subtractResources.forEach(
+        (resource) => (tempResource[resource] -= 1)
+      );
+
       return {
         ...state,
         [action.payload.user]: {
-          ...state[action.payload.user],
-          [action.payload.resourceType]:
-            state[action.payload.user].resources[action.payload.resourceType] -
-              1 || 0,
+          resources: tempResource,
+          config: tempConfig,
         },
       };
     }
