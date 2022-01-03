@@ -1,23 +1,49 @@
 import { Action, ActionType } from "../reducer";
-import { parseImage } from "../utils/index.";
+import { ResourceType } from "../types";
+import { parseBuildImage, parseResourceImage } from "../utils/index.";
 import keywords from "../utils/keywords";
 
 export const parseGot = (
   node: HTMLElement,
   dispatch: React.Dispatch<Action>
 ) => {
-  if (!node.textContent?.includes(keywords.receivedResourcesSnippet)) return;
+  if (!node.textContent?.includes(keywords.receivedResourcesSnippet))
+    return false;
   if (node.textContent) {
     const player = node.textContent
       .replace(keywords.receivedResourcesSnippet, "")
       .split(" ")[0];
 
-    const addResources = parseImage(node);
+    const addResources = parseResourceImage(node) as ResourceType[];
 
     dispatch({
       type: ActionType.ADD_RESOURCE,
       payload: { user: player, addResources },
     });
+
+    return true;
+  }
+};
+
+export const parseBuild = (
+  node: HTMLElement,
+  dispatch: React.Dispatch<Action>
+) => {
+  if (!node.textContent?.includes(keywords.builtSnippet)) return false;
+  if (node.textContent) {
+    const player = node.textContent
+      .replace(keywords.receivedResourcesSnippet, "")
+      .split(" ")[0];
+
+    const build = parseBuildImage(node);
+    console.log("build", build, node.textContent);
+
+    if (build) {
+      dispatch({
+        type: ActionType.BUILD,
+        payload: { user: player, build },
+      });
+    }
   }
 };
 
@@ -37,7 +63,7 @@ export const recognizeUsers = (
       .replace(keywords.placeInitialSettlementSnippet, "")
       .split(" ")[0];
 
-    const startingResources = parseImage(node);
+    const startingResources = parseResourceImage(node);
 
     dispatch({
       type: ActionType.INITIALIZE_USER,

@@ -46,6 +46,11 @@ export default {
   brick: "card_brick",
   sheep: "card_wool",
 
+  //Build
+  road: "road",
+  settlement: "settlement",
+  city: "city",
+
   // Players
   players: [],
   player_colors: {}, // player -> hex

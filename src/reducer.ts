@@ -1,8 +1,9 @@
 import React from "react";
-import { ResourceType, Users } from "./types";
+import { BuildType, ResourceType, Users } from "./types";
 import { checkForUserExistance } from "./utils/index.";
 
 export enum ActionType {
+  BUILD = "BUILD",
   ADD_RESOURCE = "ADD_RESOURCE",
   SUBTRACT_RESOURCE = "SUBTRACT_RESOURCE",
   INITIALIZE_USER = "INITIALIZE_USER",
@@ -24,6 +25,10 @@ export type Action =
   | {
       type: ActionType.SUBTRACT_RESOURCE;
       payload: { user: string; subtractResources: ResourceType[] };
+    }
+  | {
+      type: ActionType.BUILD;
+      payload: { user: string; build: BuildType };
     };
 
 export const reducer: React.Reducer<Users, Action> = (state, action) => {
@@ -74,6 +79,58 @@ export const reducer: React.Reducer<Users, Action> = (state, action) => {
       action.payload.subtractResources.forEach(
         (resource) => (tempResource[resource] -= 1)
       );
+
+      return {
+        ...state,
+        [action.payload.user]: {
+          resources: tempResource,
+          config: tempConfig,
+        },
+      };
+    }
+    case ActionType.SUBTRACT_RESOURCE: {
+      checkForUserExistance(action.payload.user, state);
+
+      const tempResource = { ...state[action.payload.user].resources };
+      const tempConfig = { ...state[action.payload.user].config };
+
+      action.payload.subtractResources.forEach(
+        (resource) => (tempResource[resource] -= 1)
+      );
+
+      return {
+        ...state,
+        [action.payload.user]: {
+          resources: tempResource,
+          config: tempConfig,
+        },
+      };
+    }
+    case ActionType.BUILD: {
+      checkForUserExistance(action.payload.user, state);
+
+      const tempResource = { ...state[action.payload.user].resources };
+      const tempConfig = { ...state[action.payload.user].config };
+
+      switch (action.payload.build) {
+        case BuildType.CITY: {
+          tempResource[ResourceType.WHEAT] -= 2;
+          tempResource[ResourceType.STONE] -= 3;
+          break;
+        }
+        case BuildType.ROAD: {
+          tempResource[ResourceType.WOOD] -= 1;
+          tempResource[ResourceType.BRICK] -= 1;
+          break;
+        }
+        case BuildType.SETTLEMENT: {
+          tempResource[ResourceType.WOOD] -= 1;
+          tempResource[ResourceType.BRICK] -= 1;
+          tempResource[ResourceType.WHEAT] -= 1;
+          tempResource[ResourceType.SHEEP] -= 1;
+          break;
+        }
+      }
 
       return {
         ...state,
