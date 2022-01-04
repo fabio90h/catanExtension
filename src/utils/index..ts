@@ -1,12 +1,22 @@
-import { BuildType, ResourceType, Users } from "../types";
+import { PurchaseType, ResourceType, Users } from "../types";
 import keywords from "./keywords";
 
+/**
+ * Converts a list of images to array
+ * @param collection
+ * @returns
+ */
 export const collectionToArray = <T extends HTMLElement>(
   collection: HTMLCollectionOf<T>
 ): Array<T> => {
   return Array.prototype.slice.call(collection);
 };
 
+/**
+ * Finds out what type of resource was received based on the keywords
+ * @param imageData
+ * @returns
+ */
 export const imageResourceConverter = (imageData: string) => {
   if (imageData.includes(keywords.wood)) return ResourceType.WOOD;
   else if (imageData.includes(keywords.brick)) return ResourceType.BRICK;
@@ -15,18 +25,36 @@ export const imageResourceConverter = (imageData: string) => {
   else if (imageData.includes(keywords.sheep)) return ResourceType.SHEEP;
 };
 
-export const imageBuildConverter = (imageData: string) => {
-  if (imageData.includes(keywords.road)) return BuildType.ROAD;
-  else if (imageData.includes(keywords.settlement)) return BuildType.SETTLEMENT;
-  else if (imageData.includes(keywords.city)) return BuildType.CITY;
+/**
+ * Finds out what type of purchase was made based on the keywords
+ * @param imageData
+ * @returns
+ */
+export const imagePurchaseConverter = (imageData: string) => {
+  if (imageData.includes(keywords.road)) return PurchaseType.ROAD;
+  else if (imageData.includes(keywords.settlement))
+    return PurchaseType.SETTLEMENT;
+  else if (imageData.includes(keywords.city)) return PurchaseType.CITY;
+  else if (imageData.includes(keywords.development))
+    return PurchaseType.DEVELOPMENT;
 };
 
+/**
+ * Converts imageType to a src of image
+ * @param imgType
+ * @returns
+ */
 export const getImg = (imgType: string) => {
   const imgName = keywords[imgType];
   if (!imgName.length) throw Error("Couldn't find resource image icon");
   return `https://colonist.io/dist/images/${imgName}.svg`;
 };
 
+/**
+ * Figures out what resources has been received from the image
+ * @param node
+ * @returns
+ */
 export const parseResourceImage = (node: HTMLElement) => {
   const images = collectionToArray(node.getElementsByTagName("img"));
 
@@ -38,15 +66,24 @@ export const parseResourceImage = (node: HTMLElement) => {
   }, []);
 };
 
-// Will get
-export const parseBuildImage = (node: HTMLElement) => {
+/**
+ * Figures out what has been bought from the image
+ * @param node
+ * @returns
+ */
+export const parsePurchaseImage = (node: HTMLElement) => {
   const images = collectionToArray(node.getElementsByTagName("img"));
   //Get the second image since the first is the player icon
   return images
-    .map((image) => imageBuildConverter(image.src))
+    .map((image) => imagePurchaseConverter(image.src))
     .find((image) => image !== undefined);
 };
 
+/**
+ * Throw error if username can not be found
+ * @param user
+ * @param usersData
+ */
 export const checkForUserExistance = (user: string, usersData: Users) => {
   if (!usersData[user]) throw Error(`Unable to find ${user} user.`);
 };

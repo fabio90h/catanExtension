@@ -1,6 +1,6 @@
 import { Action } from "../reducer";
 import keywords from "../utils/keywords";
-import { parseBuild, parseGot, recognizeUsers } from "./actionParser";
+import { parsePurchase, parseGot, recognizeUsers } from "./actionParser";
 
 // First, delete the ad
 function deleteAd() {
@@ -35,12 +35,12 @@ export const watchLog = (
           // Check for incoming logs after placement
           else {
             if (parseGot(node as HTMLElement, dispatch)) return;
-            else if (parseBuild(node as HTMLElement, dispatch)) return;
+            else if (parsePurchase(node as HTMLElement, dispatch)) return;
             /**
              * parseGotMessage,
+             * parseBuiltMessage,
+             * parseBoughtMessage,
              * 
-                parseBuiltMessage,
-                parseBoughtMessage,
                 parseTradeBankMessage,
                 parseYearofPlenty,
                 parseStoleAllOfMessage,

@@ -1,9 +1,9 @@
 import React from "react";
-import { BuildType, ResourceType, Users } from "./types";
+import { PurchaseType, ResourceType, Users } from "./types";
 import { checkForUserExistance } from "./utils/index.";
 
 export enum ActionType {
-  BUILD = "BUILD",
+  PURCHASE = "PURCHASE",
   ADD_RESOURCE = "ADD_RESOURCE",
   SUBTRACT_RESOURCE = "SUBTRACT_RESOURCE",
   INITIALIZE_USER = "INITIALIZE_USER",
@@ -27,8 +27,8 @@ export type Action =
       payload: { user: string; subtractResources: ResourceType[] };
     }
   | {
-      type: ActionType.BUILD;
-      payload: { user: string; build: BuildType };
+      type: ActionType.PURCHASE;
+      payload: { user: string; purchase: PurchaseType };
     };
 
 export const reducer: React.Reducer<Users, Action> = (state, action) => {
@@ -88,44 +88,32 @@ export const reducer: React.Reducer<Users, Action> = (state, action) => {
         },
       };
     }
-    case ActionType.SUBTRACT_RESOURCE: {
+    case ActionType.PURCHASE: {
       checkForUserExistance(action.payload.user, state);
 
       const tempResource = { ...state[action.payload.user].resources };
       const tempConfig = { ...state[action.payload.user].config };
 
-      action.payload.subtractResources.forEach(
-        (resource) => (tempResource[resource] -= 1)
-      );
-
-      return {
-        ...state,
-        [action.payload.user]: {
-          resources: tempResource,
-          config: tempConfig,
-        },
-      };
-    }
-    case ActionType.BUILD: {
-      checkForUserExistance(action.payload.user, state);
-
-      const tempResource = { ...state[action.payload.user].resources };
-      const tempConfig = { ...state[action.payload.user].config };
-
-      switch (action.payload.build) {
-        case BuildType.CITY: {
+      switch (action.payload.purchase) {
+        case PurchaseType.CITY: {
           tempResource[ResourceType.WHEAT] -= 2;
           tempResource[ResourceType.STONE] -= 3;
           break;
         }
-        case BuildType.ROAD: {
+        case PurchaseType.ROAD: {
           tempResource[ResourceType.WOOD] -= 1;
           tempResource[ResourceType.BRICK] -= 1;
           break;
         }
-        case BuildType.SETTLEMENT: {
+        case PurchaseType.SETTLEMENT: {
           tempResource[ResourceType.WOOD] -= 1;
           tempResource[ResourceType.BRICK] -= 1;
+          tempResource[ResourceType.WHEAT] -= 1;
+          tempResource[ResourceType.SHEEP] -= 1;
+          break;
+        }
+        case PurchaseType.DEVELOPMENT: {
+          tempResource[ResourceType.STONE] -= 1;
           tempResource[ResourceType.WHEAT] -= 1;
           tempResource[ResourceType.SHEEP] -= 1;
           break;

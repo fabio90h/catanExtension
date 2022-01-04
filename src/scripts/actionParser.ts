@@ -1,8 +1,14 @@
 import { Action, ActionType } from "../reducer";
 import { ResourceType } from "../types";
-import { parseBuildImage, parseResourceImage } from "../utils/index.";
+import { parsePurchaseImage, parseResourceImage } from "../utils/index.";
 import keywords from "../utils/keywords";
 
+/**
+ * Parse the Got log message to figure out what resource the player received
+ * @param node
+ * @param dispatch
+ * @returns
+ */
 export const parseGot = (
   node: HTMLElement,
   dispatch: React.Dispatch<Action>
@@ -25,25 +31,31 @@ export const parseGot = (
   }
 };
 
-export const parseBuild = (
+/**
+ * Purchase includes building or buying a development card
+ * @param node
+ * @param dispatch
+ * @returns
+ */
+export const parsePurchase = (
   node: HTMLElement,
   dispatch: React.Dispatch<Action>
 ) => {
-  if (!node.textContent?.includes(keywords.builtSnippet)) return false;
+  if (
+    !node.textContent?.includes(keywords.builtSnippet) ||
+    !node.textContent?.includes(keywords.boughtSnippet)
+  )
+    return false;
   if (node.textContent) {
-    const player = node.textContent
-      .replace(keywords.receivedResourcesSnippet, "")
-      .split(" ")[0];
+    const player = node.textContent.split(" ")[0];
 
-    const build = parseBuildImage(node);
-    console.log("build", build, node.textContent);
+    const purchase = parsePurchaseImage(node);
 
-    if (build) {
-      dispatch({
-        type: ActionType.BUILD,
-        payload: { user: player, build },
-      });
-    }
+    if (!purchase) return false;
+    dispatch({
+      type: ActionType.PURCHASE,
+      payload: { user: player, purchase },
+    });
   }
 };
 

@@ -6,10 +6,11 @@ export enum ResourceType {
   WHEAT = "WHEAT",
 }
 
-export enum BuildType {
+export enum PurchaseType {
   ROAD = "ROAD",
   SETTLEMENT = "SETTLEMENT",
   CITY = "CITY",
+  DEVELOPMENT = "DEVELOPMENT",
 }
 
 export type UserResources = Record<ResourceType, number>;

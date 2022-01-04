@@ -30,8 +30,6 @@ export default {
   tradedWithSnippet: " traded:",
   tradeEnd: "for: ",
   tradeAgreePlayer: "with: ",
-  //  tradeWantsToGiveSnippet : "wants to give:",
-  //  tradeGiveForSnippet : "for:",
 
   //Steal
   stoleFromYouSnippet: " stole:   from ",
@@ -50,6 +48,9 @@ export default {
   road: "road",
   settlement: "settlement",
   city: "city",
+
+  //Bought
+  development: "devcardback",
 
   // Players
   players: [],
