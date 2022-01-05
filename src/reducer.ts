@@ -4,9 +4,10 @@ import { checkForUserExistance } from "./utils/index.";
 
 export enum ActionType {
   PURCHASE = "PURCHASE",
-  ADD_RESOURCE = "ADD_RESOURCE",
-  SUBTRACT_RESOURCE = "SUBTRACT_RESOURCE",
+  ADD_RESOURCES = "ADD_RESOURCES",
+  SUBTRACT_RESOURCES = "SUBTRACT_RESOURCES",
   INITIALIZE_USER = "INITIALIZE_USER",
+  STEAL_ALL = "STEAL_ALL",
 }
 
 export type Action =
@@ -19,16 +20,24 @@ export type Action =
       };
     }
   | {
-      type: ActionType.ADD_RESOURCE;
+      type: ActionType.ADD_RESOURCES;
       payload: { user: string; addResources: ResourceType[] };
     }
   | {
-      type: ActionType.SUBTRACT_RESOURCE;
+      type: ActionType.SUBTRACT_RESOURCES;
       payload: { user: string; subtractResources: ResourceType[] };
     }
   | {
       type: ActionType.PURCHASE;
       payload: { user: string; purchase: PurchaseType };
+    }
+  | {
+      type: ActionType.STEAL_ALL;
+      payload: {
+        user: string;
+        stolenResource: ResourceType;
+        stoleAmount: number;
+      };
     };
 
 export const reducer: React.Reducer<Users, Action> = (state, action) => {
@@ -52,7 +61,7 @@ export const reducer: React.Reducer<Users, Action> = (state, action) => {
         },
       };
     }
-    case ActionType.ADD_RESOURCE: {
+    case ActionType.ADD_RESOURCES: {
       checkForUserExistance(action.payload.user, state);
 
       const tempResource = { ...state[action.payload.user].resources };
@@ -70,7 +79,7 @@ export const reducer: React.Reducer<Users, Action> = (state, action) => {
         },
       };
     }
-    case ActionType.SUBTRACT_RESOURCE: {
+    case ActionType.SUBTRACT_RESOURCES: {
       checkForUserExistance(action.payload.user, state);
 
       const tempResource = { ...state[action.payload.user].resources };
@@ -122,6 +131,30 @@ export const reducer: React.Reducer<Users, Action> = (state, action) => {
 
       return {
         ...state,
+        [action.payload.user]: {
+          resources: tempResource,
+          config: tempConfig,
+        },
+      };
+    }
+    case ActionType.STEAL_ALL: {
+      checkForUserExistance(action.payload.user, state);
+      const users = { ...state };
+
+      const tempResource = { ...users[action.payload.user].resources };
+      const tempConfig = { ...users[action.payload.user].config };
+
+      //Remove resource from each player
+      Object.keys(state).forEach((player) => {
+        if (player !== action.payload.user)
+          users[player].resources[action.payload.stolenResource] = 0;
+      });
+
+      //Add the stolen resources to the player
+      tempResource[action.payload.stolenResource] = action.payload.stoleAmount;
+
+      return {
+        ...users,
         [action.payload.user]: {
           resources: tempResource,
           config: tempConfig,

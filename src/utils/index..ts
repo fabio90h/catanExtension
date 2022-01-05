@@ -128,11 +128,11 @@ export const exchangeResources = (
   receivingResources: ResourceType[]
 ) => {
   dispatch({
-    type: ActionType.ADD_RESOURCE,
+    type: ActionType.ADD_RESOURCES,
     payload: { user: player, addResources: receivingResources },
   });
   dispatch({
-    type: ActionType.SUBTRACT_RESOURCE,
+    type: ActionType.SUBTRACT_RESOURCES,
     payload: { user: player, subtractResources: sendingResources },
   });
 };

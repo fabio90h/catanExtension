@@ -21,6 +21,8 @@ export default {
 
   //Development Cards
   stoleAllOfSnippet: "used Monopoly",
+  monoplyStole: "stole ",
+
   yearOfPlenty: " took from bank",
 
   //Discard

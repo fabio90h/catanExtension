@@ -6,6 +6,9 @@ import {
   recognizeUsers,
   parseBankTrade,
   parsePlayersTrade,
+  parseMonoplyCard,
+  parseYearofPlenty,
+  parseDiscardedMessage,
 } from "./actionParser";
 
 // First, delete the ad
@@ -44,6 +47,18 @@ export const watchLog = (
             else if (parsePurchase(node as HTMLElement, dispatch)) return;
             else if (parseBankTrade(node as HTMLElement, dispatch)) return;
             else if (parsePlayersTrade(node as HTMLElement, dispatch)) return;
+            else if (
+              parseMonoplyCard(
+                node as HTMLElement,
+                mutation.previousSibling as HTMLElement,
+                dispatch
+              )
+            )
+              return;
+            else if (parseYearofPlenty(node as HTMLElement, dispatch)) return;
+            else if (parseDiscardedMessage(node as HTMLElement, dispatch))
+              return;
+
             /**
              * parseGotMessage,
              * parseBuiltMessage,
@@ -51,10 +66,10 @@ export const watchLog = (
              * parseTradeBankMessage,
              * parseTradedMessage
              * 
-                parseYearofPlenty,
-                parseStoleAllOfMessage,
-                parseDiscardedMessage,
-                
+             * parseStoleAllOfMessage,
+             * parseYearofPlenty,
+             * parseDiscardedMessage,
+             *                 
                 parseStoleFromYouMessage,
                 parseStoleUnknownMessage,
                 reviewTheft

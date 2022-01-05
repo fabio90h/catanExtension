@@ -23,10 +23,10 @@ export const parseGot = (
   if (node.textContent) {
     const player = node.textContent.split(" ")[0];
 
-    const addResources = parseResourceImage(node) as ResourceType[];
+    const addResources = parseResourceImage(node);
 
     dispatch({
-      type: ActionType.ADD_RESOURCE,
+      type: ActionType.ADD_RESOURCES,
       payload: { user: player, addResources },
     });
 
@@ -113,6 +113,65 @@ export const parseBankTrade = (
       trade.gaveResources,
       trade.tookResources
     );
+  }
+};
+
+//NEED TO TEST
+export const parseMonoplyCard = (
+  node: HTMLElement,
+  previousNode: HTMLElement,
+  dispatch: React.Dispatch<Action>
+) => {
+  const nodeText = node.textContent;
+  if (!previousNode.textContent?.includes(keywords.stoleAllOfSnippet))
+    return false;
+  if (nodeText) {
+    const player = nodeText.split(" ")[0];
+    const stoleAmount = parseInt(nodeText.split(keywords.monoplyStole)[1]);
+
+    const stolenResources = parseResourceImage(node);
+
+    dispatch({
+      type: ActionType.STEAL_ALL,
+      payload: {
+        user: player,
+        stolenResource: stolenResources[0],
+        stoleAmount,
+      },
+    });
+  }
+};
+
+//NEED TO TEST
+export const parseYearofPlenty = (
+  node: HTMLElement,
+  dispatch: React.Dispatch<Action>
+) => {
+  if (!node.textContent?.includes(keywords.yearOfPlenty)) return false;
+  if (node.textContent) {
+    const player = node.textContent.split(" ")[0];
+    const addResources = parseResourceImage(node);
+
+    dispatch({
+      type: ActionType.ADD_RESOURCES,
+      payload: { user: player, addResources },
+    });
+  }
+};
+
+export const parseDiscardedMessage = (
+  node: HTMLElement,
+  dispatch: React.Dispatch<Action>
+) => {
+  if (!node.textContent?.includes(keywords.discardedSnippet)) return false;
+  if (node.textContent) {
+    const player = node.textContent.split(" ")[0];
+    const subtractResources = parseResourceImage(node);
+
+    dispatch({
+      type: ActionType.SUBTRACT_RESOURCES,
+      payload: { user: player, subtractResources },
+    });
   }
 };
 
