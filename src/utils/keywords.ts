@@ -52,13 +52,6 @@ export default {
   //Bought
   development: "devcardback",
 
-  // Players
-  players: [],
-  player_colors: {}, // player -> hex
-
-  // Per player per resource
-  resources: {},
-
   // Thefts - transactions from when the robber is placed and stolen resource is unknown
   thefts: [],
   // Thefts - once the unknown resources are accounted for

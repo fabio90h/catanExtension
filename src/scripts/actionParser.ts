@@ -1,6 +1,11 @@
 import { Action, ActionType } from "../reducer";
 import { ResourceType } from "../types";
-import { parsePurchaseImage, parseResourceImage } from "../utils/index.";
+import {
+  exchangeResources,
+  parseExchangeImages,
+  parsePurchaseImage,
+  parseResourceImage,
+} from "../utils/index.";
 import keywords from "../utils/keywords";
 
 /**
@@ -16,9 +21,7 @@ export const parseGot = (
   if (!node.textContent?.includes(keywords.receivedResourcesSnippet))
     return false;
   if (node.textContent) {
-    const player = node.textContent
-      .replace(keywords.receivedResourcesSnippet, "")
-      .split(" ")[0];
+    const player = node.textContent.split(" ")[0];
 
     const addResources = parseResourceImage(node) as ResourceType[];
 
@@ -47,7 +50,7 @@ export const parsePurchase = (
   )
     return false;
   if (node.textContent) {
-    const player = node.textContent.split(" ")[0];
+    const player = node.textContent.split(" ")[0]; //TODO: creates a helper function here?
 
     const purchase = parsePurchaseImage(node);
 
@@ -56,6 +59,60 @@ export const parsePurchase = (
       type: ActionType.PURCHASE,
       payload: { user: player, purchase },
     });
+  }
+};
+
+export const parsePlayersTrade = (
+  node: HTMLElement,
+  dispatch: React.Dispatch<Action>
+) => {
+  if (!node.textContent?.includes(keywords.tradedWithSnippet)) return false;
+  if (node.textContent) {
+    const textContentArray = node.textContent.split(" ");
+
+    const offeringPlayer = textContentArray[0];
+    const agreedPlayer = textContentArray[textContentArray.length - 1];
+
+    const trade = parseExchangeImages(
+      node,
+      keywords.tradedWithSnippet,
+      keywords.tradeEnd
+    );
+
+    exchangeResources(
+      dispatch,
+      offeringPlayer,
+      trade.gaveResources,
+      trade.tookResources
+    );
+    exchangeResources(
+      dispatch,
+      agreedPlayer,
+      trade.tookResources,
+      trade.gaveResources
+    );
+  }
+};
+
+export const parseBankTrade = (
+  node: HTMLElement,
+  dispatch: React.Dispatch<Action>
+) => {
+  if (!node.textContent?.includes(keywords.tradeBankGaveSnippet)) return false;
+  if (node.textContent) {
+    const player = node.textContent.split(" ")[0]; //TODO: creates a helper function here?
+
+    const trade = parseExchangeImages(
+      node,
+      keywords.tradeBankGaveSnippet,
+      keywords.tradeBankTookSnippet
+    );
+    exchangeResources(
+      dispatch,
+      player,
+      trade.gaveResources,
+      trade.tookResources
+    );
   }
 };
 
@@ -71,9 +128,7 @@ export const recognizeUsers = (
   if (node.textContent) {
     console.log("recognizeUsers", node);
 
-    const player = node.textContent
-      .replace(keywords.placeInitialSettlementSnippet, "")
-      .split(" ")[0];
+    const player = node.textContent.split(" ")[0];
 
     const startingResources = parseResourceImage(node);
 

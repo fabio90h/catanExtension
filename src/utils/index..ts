@@ -1,3 +1,4 @@
+import { Action, ActionType } from "../reducer";
 import { PurchaseType, ResourceType, Users } from "../types";
 import keywords from "./keywords";
 
@@ -77,6 +78,63 @@ export const parsePurchaseImage = (node: HTMLElement) => {
   return images
     .map((image) => imagePurchaseConverter(image.src))
     .find((image) => image !== undefined);
+};
+
+/**
+ * Figures out what is being sent out and what is being received. This
+ * can be a offer, or trade.
+ */
+export const parseExchangeImages = (
+  node: HTMLElement,
+  gaveMessage: string,
+  tookMessage: string
+) => {
+  const innerHTML = node.innerHTML;
+  const gaveIndex = innerHTML.indexOf(gaveMessage);
+  const tookIndex = innerHTML.indexOf(tookMessage);
+
+  const gaveResources = convertImgStringToResourceType(
+    innerHTML,
+    gaveIndex,
+    tookIndex
+  );
+  const tookResources = convertImgStringToResourceType(innerHTML, tookIndex);
+
+  return {
+    tookResources,
+    gaveResources,
+  };
+};
+
+const convertImgStringToResourceType = (
+  innerHTML: string,
+  startIndex: number,
+  endIndex?: number
+) => {
+  return innerHTML
+    .slice(startIndex, endIndex)
+    .split("<img")
+    .reduce<ResourceType[]>((acc, curr) => {
+      const resourceType = imageResourceConverter(curr);
+      if (resourceType) return [...acc, resourceType];
+      return acc;
+    }, []);
+};
+
+export const exchangeResources = (
+  dispatch: React.Dispatch<Action>,
+  player: string,
+  sendingResources: ResourceType[],
+  receivingResources: ResourceType[]
+) => {
+  dispatch({
+    type: ActionType.ADD_RESOURCE,
+    payload: { user: player, addResources: receivingResources },
+  });
+  dispatch({
+    type: ActionType.SUBTRACT_RESOURCE,
+    payload: { user: player, subtractResources: sendingResources },
+  });
 };
 
 /**

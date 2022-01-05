@@ -1,6 +1,12 @@
 import { Action } from "../reducer";
 import keywords from "../utils/keywords";
-import { parsePurchase, parseGot, recognizeUsers } from "./actionParser";
+import {
+  parsePurchase,
+  parseGot,
+  recognizeUsers,
+  parseBankTrade,
+  parsePlayersTrade,
+} from "./actionParser";
 
 // First, delete the ad
 function deleteAd() {
@@ -36,16 +42,19 @@ export const watchLog = (
           else {
             if (parseGot(node as HTMLElement, dispatch)) return;
             else if (parsePurchase(node as HTMLElement, dispatch)) return;
+            else if (parseBankTrade(node as HTMLElement, dispatch)) return;
+            else if (parsePlayersTrade(node as HTMLElement, dispatch)) return;
             /**
              * parseGotMessage,
              * parseBuiltMessage,
              * parseBoughtMessage,
+             * parseTradeBankMessage,
+             * parseTradedMessage
              * 
-                parseTradeBankMessage,
                 parseYearofPlenty,
                 parseStoleAllOfMessage,
                 parseDiscardedMessage,
-                parseTradedMessage,
+                
                 parseStoleFromYouMessage,
                 parseStoleUnknownMessage,
                 reviewTheft
