@@ -9,6 +9,7 @@ import {
   parseMonoplyCard,
   parseYearofPlenty,
   parseDiscardedMessage,
+  parseStoleFromYouMessage,
 } from "./actionParser";
 
 // First, delete the ad
@@ -58,7 +59,8 @@ export const watchLog = (
             else if (parseYearofPlenty(node as HTMLElement, dispatch)) return;
             else if (parseDiscardedMessage(node as HTMLElement, dispatch))
               return;
-
+            else if (parseStoleFromYouMessage(node as HTMLElement, dispatch))
+              return;
             /**
              * parseGotMessage,
              * parseBuiltMessage,
@@ -68,11 +70,13 @@ export const watchLog = (
              * 
              * parseStoleAllOfMessage,
              * parseYearofPlenty,
+             * 
              * parseDiscardedMessage,
+             * parseStoleFromYouMessage
              *                 
-                parseStoleFromYouMessage,
                 parseStoleUnknownMessage,
                 reviewTheft
+                parseDealProposal
              */
           }
         });
