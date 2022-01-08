@@ -5,19 +5,22 @@ import { reducer } from "./reducer";
 import { findTranscription } from "./scripts";
 
 function App() {
-  const [usersData, dispatch] = React.useReducer(reducer, {});
+  const [gameData, dispatch] = React.useReducer(reducer, {
+    users: {},
+    thefts: [],
+  });
 
   React.useEffect(() => {
     findTranscription(dispatch);
   }, []);
 
   React.useEffect(() => {
-    console.log("usersData", usersData);
-  }, [usersData]);
+    console.log("gameData", gameData);
+  }, []);
 
   return (
     <div>
-      <Table usersData={usersData} />
+      <Table gameData={gameData} dispatch={dispatch} />
     </div>
   );
 }

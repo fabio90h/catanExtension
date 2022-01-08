@@ -1,5 +1,4 @@
 import { Action, ActionType } from "../reducer";
-import { ResourceType } from "../types";
 import {
   exchangeResources,
   parseExchangeImages,
@@ -45,7 +44,7 @@ export const parsePurchase = (
   dispatch: React.Dispatch<Action>
 ) => {
   if (
-    !node.textContent?.includes(keywords.builtSnippet) ||
+    !node.textContent?.includes(keywords.builtSnippet) &&
     !node.textContent?.includes(keywords.boughtSnippet)
   )
     return false;
@@ -53,6 +52,7 @@ export const parsePurchase = (
     const player = node.textContent.split(" ")[0]; //TODO: creates a helper function here?
 
     const purchase = parsePurchaseImage(node);
+    console.log("purchase", purchase);
 
     if (!purchase) return false;
     dispatch({
@@ -203,6 +203,23 @@ export const parseStoleFromYouMessage = (
       type: ActionType.SUBTRACT_RESOURCES,
       payload: { user: victim, subtractResources: stolenResource },
     });
+  }
+};
+
+export const parseStoleUnknownMessage = (
+  node: HTMLElement,
+  dispatch: React.Dispatch<Action>
+) => {
+  const nodeText = node.textContent;
+  if (!nodeText?.includes(keywords.stoleFromSnippet)) return false;
+  if (nodeText) {
+    const nodeTextArray = nodeText.split(" ");
+    console.log("nodeTextArray", nodeTextArray);
+    const stealer = nodeTextArray[0];
+    const victim = nodeTextArray[nodeTextArray.length - 1];
+    console.log(stealer, victim);
+
+    dispatch({ type: ActionType.UNKNOWN_STEAL, payload: { stealer, victim } });
   }
 };
 

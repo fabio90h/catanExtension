@@ -1,11 +1,16 @@
 import React from "react";
-import { ResourceType, Users } from "../types";
+import { GameData, ResourceType } from "../types";
 import { getImg } from "../utils/index.";
 import styled from "styled-components";
+import Theft from "./Theft";
+import { Action } from "../reducer";
 
 type Props = {
-  usersData: Users;
+  gameData: GameData;
+  dispatch: React.Dispatch<Action>;
 };
+
+const tableHeaders = Object.keys(ResourceType);
 
 const TableContainer = styled.table`
   position: absolute;
@@ -25,6 +30,7 @@ const TableHeader = styled.thead`
 const TablePlayerHeader = styled.th`
   color: black;
   font-weight: 600;
+  text-align: center;
   text-transform: uppercase;
   border: none;
   padding-left: 10px; /* width of cell-color + margin-left of player-name */
@@ -32,7 +38,7 @@ const TablePlayerHeader = styled.th`
 `;
 
 // BODY
-const TableBodyRow = styled.tr`
+export const TableBodyRow = styled.tr`
   border: none;
   height: 3em;
   &:nth-child(2n-1) {
@@ -58,7 +64,7 @@ const TablePlayerName = styled.span<{ color: string }>`
   margin: 0px 10px 0 4px;
   color: ${(props) => props.color};
 `;
-const TableBodyCell = styled.td`
+export const TableBodyCell = styled.td`
   color: black;
   border: none;
   box-sizing: unset;
@@ -68,15 +74,24 @@ const TableBodyCell = styled.td`
   vertical-align: top;
 `;
 
-const TableImage = styled.img`
+export const TableImage = styled.img`
   width: 24px;
   height: 36px;
 `;
 
-const tableHeaders = Object.keys(ResourceType);
+// TODO: For testing only
+const mockTable = {
+  who: { stealer: "Fabio", victim: "Alex" },
+  what: [ResourceType.BRICK, ResourceType.WHEAT, ResourceType.SHEEP],
+};
 
 const Table: React.FC<Props> = (props) => {
-  const { usersData } = props;
+  const {
+    gameData: { users, thefts },
+    dispatch,
+  } = props;
+
+  React.useEffect(() => console.log("thefts", thefts), [thefts]);
 
   return (
     <TableContainer>
@@ -86,32 +101,42 @@ const Table: React.FC<Props> = (props) => {
           <TablePlayerHeader>Name</TablePlayerHeader>
           {tableHeaders.map((header) => (
             <TableBodyCell>
-              <TableImage src={getImg(header.toLowerCase())} />
+              <TableImage src={getImg(header as ResourceType)} />
             </TableBodyCell>
           ))}
         </tr>
       </TableHeader>
       {/* BODY */}
       <tbody>
-        {Object.keys(usersData).map((user) => {
+        {Object.keys(users).map((user) => {
           return (
             <TableBodyRow>
               {/* USER NAME AND COLOR */}
               <TablePlayerBodyCell>
-                <TablePlayerBodyCellColor
-                  color={usersData[user].config.color}
-                />
-                <TablePlayerName color={usersData[user].config.color}>
+                <TablePlayerBodyCellColor color={users[user].config.color} />
+                <TablePlayerName color={users[user].config.color}>
                   {user}
                 </TablePlayerName>
               </TablePlayerBodyCell>
               {/* COUNT */}
               {tableHeaders.map((header) => (
-                <TableBodyCell>
-                  {usersData[user].resources[header]}
-                </TableBodyCell>
+                <TableBodyCell>{users[user].resources[header]}</TableBodyCell>
               ))}
             </TableBodyRow>
+          );
+        })}
+      </tbody>
+      {/* List of thefts */}
+      <tbody style={{ border: "3px solid red" }}>
+        {thefts.map((theft, id) => {
+          return (
+            <Theft
+              key={id}
+              id={id}
+              theft={theft}
+              users={users}
+              dispatch={dispatch}
+            />
           );
         })}
       </tbody>

@@ -1,5 +1,5 @@
 import { Action, ActionType } from "../reducer";
-import { PurchaseType, ResourceType, Users } from "../types";
+import { ImageType, PurchaseType, ResourceType, Users } from "../types";
 import keywords from "./keywords";
 
 /**
@@ -45,9 +45,9 @@ export const imagePurchaseConverter = (imageData: string) => {
  * @param imgType
  * @returns
  */
-export const getImg = (imgType: string) => {
-  const imgName = keywords[imgType];
-  if (!imgName.length) throw Error("Couldn't find resource image icon");
+export const getImg = (imgType: ImageType) => {
+  const imgName: string = keywords[imgType.toLocaleLowerCase()];
+  if (!imgName) throw Error("Couldn't find resource image icon");
   return `https://colonist.io/dist/images/${imgName}.svg`;
 };
 
