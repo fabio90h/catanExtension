@@ -19,7 +19,7 @@ export enum PurchaseType {
 
 export type Theft = {
   who: { stealer: string; victim: string };
-  what: ResourceType[];
+  what: Partial<UserResources>;
 };
 
 export type UserResources = Record<ResourceType, number>;
@@ -32,7 +32,6 @@ export type Users = Record<
     config: UserConfig;
   }
 >;
-
 export type ImageType = PurchaseType | ResourceType | UnknownType;
 
 export type GameData = { users: Users; thefts: Theft[] };

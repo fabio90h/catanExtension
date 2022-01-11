@@ -1,6 +1,6 @@
 import React from "react";
-import { GameData, ResourceType } from "../types";
-import { getImg } from "../utils/index.";
+import { GameData, ResourceType, Theft as TheftType } from "../types";
+import { calculateTheftForPlayerAndResource, getImg } from "../utils/index.";
 import styled from "styled-components";
 import Theft from "./Theft";
 import { Action } from "../reducer";
@@ -10,7 +10,7 @@ type Props = {
   dispatch: React.Dispatch<Action>;
 };
 
-const tableHeaders = Object.keys(ResourceType);
+const tableHeaders = Object.keys(ResourceType) as ResourceType[];
 
 const TableContainer = styled.table`
   position: absolute;
@@ -80,9 +80,13 @@ export const TableImage = styled.img`
 `;
 
 // TODO: For testing only
-const mockTable = {
+const mockTable: TheftType = {
   who: { stealer: "Fabio", victim: "Alex" },
-  what: [ResourceType.BRICK, ResourceType.WHEAT, ResourceType.SHEEP],
+  what: {
+    [ResourceType.BRICK]: 1,
+    [ResourceType.WHEAT]: 1,
+    [ResourceType.SHEEP]: 1,
+  },
 };
 
 const Table: React.FC<Props> = (props) => {
@@ -101,7 +105,7 @@ const Table: React.FC<Props> = (props) => {
           <TablePlayerHeader>Name</TablePlayerHeader>
           {tableHeaders.map((header) => (
             <TableBodyCell>
-              <TableImage src={getImg(header as ResourceType)} />
+              <TableImage src={getImg(header)} />
             </TableBodyCell>
           ))}
         </tr>
@@ -118,10 +122,21 @@ const Table: React.FC<Props> = (props) => {
                   {user}
                 </TablePlayerName>
               </TablePlayerBodyCell>
-              {/* COUNT */}
-              {tableHeaders.map((header) => (
-                <TableBodyCell>{users[user].resources[header]}</TableBodyCell>
-              ))}
+              {/* COUNT WITH POSSIBLE THEFT*/}
+              {tableHeaders.map((header) => {
+                const theftCount = calculateTheftForPlayerAndResource(
+                  user,
+                  header,
+                  thefts
+                );
+                const resourceCount = users[user].resources[header];
+                return (
+                  <TableBodyCell>
+                    {resourceCount}
+                    {theftCount !== 0 && ` (${resourceCount + theftCount})`}
+                  </TableBodyCell>
+                );
+              })}
             </TableBodyRow>
           );
         })}

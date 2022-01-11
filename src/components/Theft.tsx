@@ -13,9 +13,27 @@ type Props = {
 };
 
 // TODO: For testing only
-const mockUser = {
-  Fabio: { config: { color: "red" } },
-  Alex: { config: { color: "blue" } },
+const mockUser: Users = {
+  Fabio: {
+    resources: {
+      [ResourceType.WOOD]: 3,
+      [ResourceType.BRICK]: 3,
+      [ResourceType.SHEEP]: 3,
+      [ResourceType.STONE]: 3,
+      [ResourceType.WHEAT]: 3,
+    },
+    config: { color: "red" },
+  },
+  Alex: {
+    resources: {
+      [ResourceType.WOOD]: 1,
+      [ResourceType.BRICK]: 0,
+      [ResourceType.SHEEP]: 1,
+      [ResourceType.STONE]: 0,
+      [ResourceType.WHEAT]: 2,
+    },
+    config: { color: "blue" },
+  },
 };
 
 const ImageContainer = styled.div`
@@ -65,14 +83,15 @@ const Theft: React.FC<Props> = (props) => {
       <TableBodyRow>
         <th scope="row" colSpan={6}>
           <ImageContainer>
-            {theft.what.map((resource) => (
-              <a onClick={() => handleResourceClick(resource)}>
-                <TableImage src={getImg(resource)} />
+            {Object.keys(theft.what).map((resource) => (
+              <a onClick={() => handleResourceClick(resource as ResourceType)}>
+                <TableImage src={getImg(resource as ResourceType)} />
               </a>
             ))}
-            <a onClick={() => console.log("unknown")}>
+            {/* MIGHT NOT BE NECESSARY */}
+            {/* <a onClick={handleUnknownResourceClick}>
               <TableImage src={getImg(UnknownType.UNKOWN)} />
-            </a>
+            </a> */}
           </ImageContainer>
         </th>
       </TableBodyRow>

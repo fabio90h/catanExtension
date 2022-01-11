@@ -52,12 +52,18 @@ export const parsePurchase = (
     const player = node.textContent.split(" ")[0]; //TODO: creates a helper function here?
 
     const purchase = parsePurchaseImage(node);
-    console.log("purchase", purchase);
 
     if (!purchase) return false;
+
     dispatch({
       type: ActionType.PURCHASE,
       payload: { user: player, purchase },
+    });
+
+    //Review steals to see if any can be resolved with the purchase action.
+    dispatch({
+      type: ActionType.REVIEW_STEALS,
+      payload: { player },
     });
   }
 };
@@ -78,19 +84,26 @@ export const parsePlayersTrade = (
       keywords.tradedWithSnippet,
       keywords.tradeEnd
     );
-
+    // OfferingPlayer's resources are sent to agreedPlayer
     exchangeResources(
       dispatch,
       offeringPlayer,
-      trade.gaveResources,
-      trade.tookResources
+      agreedPlayer,
+      trade.gaveResources
     );
+    // AgreedPlayer's resources are sent to offeringPlayer
     exchangeResources(
       dispatch,
       agreedPlayer,
-      trade.tookResources,
-      trade.gaveResources
+      offeringPlayer,
+      trade.tookResources
     );
+
+    //Review steals to see if any can be resolved with the purchase action.
+    dispatch({
+      type: ActionType.REVIEW_STEALS,
+      payload: { player: agreedPlayer },
+    });
   }
 };
 
@@ -107,12 +120,21 @@ export const parseBankTrade = (
       keywords.tradeBankGaveSnippet,
       keywords.tradeBankTookSnippet
     );
-    exchangeResources(
-      dispatch,
-      player,
-      trade.gaveResources,
-      trade.tookResources
-    );
+
+    dispatch({
+      type: ActionType.ADD_RESOURCES,
+      payload: { user: player, addResources: trade.tookResources },
+    });
+    dispatch({
+      type: ActionType.SUBTRACT_RESOURCES,
+      payload: { user: player, subtractResources: trade.gaveResources },
+    });
+
+    //Review steals to see if any can be resolved with the purchase action.
+    dispatch({
+      type: ActionType.REVIEW_STEALS,
+      payload: { player },
+    });
   }
 };
 
@@ -172,6 +194,12 @@ export const parseDiscardedMessage = (
       type: ActionType.SUBTRACT_RESOURCES,
       payload: { user: player, subtractResources },
     });
+
+    //Review steals
+    dispatch({
+      type: ActionType.REVIEW_STEALS,
+      payload: { player },
+    });
   }
 };
 
@@ -202,6 +230,12 @@ export const parseStoleFromYouMessage = (
     dispatch({
       type: ActionType.SUBTRACT_RESOURCES,
       payload: { user: victim, subtractResources: stolenResource },
+    });
+
+    //Review steals
+    dispatch({
+      type: ActionType.REVIEW_STEALS,
+      payload: { player: stealer === keywords.userName ? victim : stealer },
     });
   }
 };

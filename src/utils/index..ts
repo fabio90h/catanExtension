@@ -1,5 +1,12 @@
 import { Action, ActionType } from "../reducer";
-import { ImageType, PurchaseType, ResourceType, Users } from "../types";
+import {
+  ImageType,
+  PurchaseType,
+  ResourceType,
+  Theft,
+  UserResources,
+  Users,
+} from "../types";
 import keywords from "./keywords";
 
 /**
@@ -121,19 +128,43 @@ const convertImgStringToResourceType = (
     }, []);
 };
 
+export const exchangeResourcesPure = (
+  users: Users,
+  sendingPlayer: string,
+  receivingPlayer: string,
+  resources: ResourceType[]
+) => {
+  const sendingPlayerResources: UserResources = {
+    ...users[sendingPlayer].resources,
+  };
+  const receivingPlayerResources: UserResources = {
+    ...users[receivingPlayer].resources,
+  };
+
+  resources.forEach((resource) => {
+    sendingPlayerResources[resource] -= 1;
+    receivingPlayerResources[resource] += 1;
+  });
+
+  users[sendingPlayer].resources = sendingPlayerResources;
+  users[receivingPlayer].resources = receivingPlayerResources;
+
+  return users;
+};
+
 export const exchangeResources = (
   dispatch: React.Dispatch<Action>,
-  player: string,
-  sendingResources: ResourceType[],
-  receivingResources: ResourceType[]
+  sendingPlayer: string,
+  receivingPlayer: string,
+  resources: ResourceType[]
 ) => {
   dispatch({
     type: ActionType.ADD_RESOURCES,
-    payload: { user: player, addResources: receivingResources },
+    payload: { user: receivingPlayer, addResources: resources },
   });
   dispatch({
     type: ActionType.SUBTRACT_RESOURCES,
-    payload: { user: player, subtractResources: sendingResources },
+    payload: { user: sendingPlayer, subtractResources: resources },
   });
 };
 
@@ -145,3 +176,23 @@ export const exchangeResources = (
 export const checkForUserExistance = (user: string, usersData: Users) => {
   if (!usersData[user]) throw Error(`Unable to find ${user} user.`);
 };
+
+/**
+ * Calculate the total lost quantity of a resource for a given player.
+ * i.e. if 1 card was potentially stolen, return 1.
+ */
+export function calculateTheftForPlayerAndResource(
+  player: string,
+  resourceType: ResourceType,
+  thefts: Theft[]
+) {
+  return thefts.reduce((acc, theft) => {
+    if (theft.who.stealer === player) {
+      return acc + (theft.what[resourceType] ? 1 : 0);
+    }
+    if (theft.who.victim === player) {
+      return acc - (theft.what[resourceType] ? 1 : 0);
+    }
+    return 0;
+  }, 0);
+}
