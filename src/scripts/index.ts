@@ -11,6 +11,7 @@ import {
   parseDiscardedMessage,
   parseStoleFromYouMessage,
   parseStoleUnknownMessage,
+  parsePurposalMessage,
 } from "./actionParser";
 
 // First, delete the ad
@@ -64,6 +65,8 @@ export const watchLog = (
               return;
             else if (parseStoleUnknownMessage(node as HTMLElement, dispatch))
               return;
+            else if (parsePurposalMessage(node as HTMLElement, dispatch))
+              return;
 
             /**
              * parseGotMessage,
@@ -74,14 +77,16 @@ export const watchLog = (
              * arseDiscardedMessage,
              * parseStoleFromYouMessage
              * 
+             * parseStoleUnknownMessage,
+             * reviewTheft
+             * parseDealProposal
+             * 
              * parseStoleAllOfMessage,
              * parseYearofPlenty,
              * 
 
              *                 
-                parseStoleUnknownMessage,
-                reviewTheft
-                parseDealProposal
+                
              */
           }
         });
