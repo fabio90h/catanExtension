@@ -140,7 +140,6 @@ export const parseBankTrade = (
   }
 };
 
-//NEED TO TEST
 export const parseMonoplyCard = (
   node: HTMLElement,
   previousNode: HTMLElement,
@@ -250,10 +249,8 @@ export const parseStoleUnknownMessage = (
   if (!nodeText?.includes(keywords.stoleFromSnippet)) return false;
   if (nodeText) {
     const nodeTextArray = nodeText.split(" ");
-    console.log("nodeTextArray", nodeTextArray);
     const stealer = nodeTextArray[0];
     const victim = nodeTextArray[nodeTextArray.length - 1];
-    console.log(stealer, victim);
 
     dispatch({ type: ActionType.UNKNOWN_STEAL, payload: { stealer, victim } });
   }
@@ -289,8 +286,6 @@ export const recognizeUsers = (
   if (!node.textContent?.includes(keywords.placeInitialSettlementSnippet))
     return;
   if (node.textContent) {
-    console.log("recognizeUsers", node);
-
     const player = node.textContent.split(" ")[0];
 
     const startingResources = parseResourceImage(node);
