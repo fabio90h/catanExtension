@@ -198,6 +198,25 @@ export const giveResourcesToPlayer = (
   parseGot(node, dipatch);
 };
 
+/**
+ * Method to give players resources
+ * @param dipatch
+ */
+export const givePlayersInitialResources = (
+  dispatch: React.Dispatch<Action>,
+  playersResources: Record<string, ResourceType[]>,
+  players: Users
+) => {
+  Object.entries(playersResources).forEach(([player, resources]) => {
+    giveResourcesToPlayer(
+      dispatch,
+      player,
+      resources,
+      players[player].config.color
+    );
+  });
+};
+
 export const playerMakesPurchase = (
   dipatch: React.Dispatch<Action>,
   user: string,

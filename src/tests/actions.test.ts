@@ -21,6 +21,7 @@ import {
   discardCards,
   stoleFromOrByYou,
   unknownSteal,
+  givePlayersInitialResources,
 } from "./utils";
 import testData from "./data";
 
@@ -111,6 +112,7 @@ describe("Action Tests", () => {
   describe("Spending resources works as expected", () => {
     let playerName: string;
     let stealerName: string;
+    let stealer2: string;
 
     beforeEach(() => {
       // Creates the players and its initial resources
@@ -118,10 +120,10 @@ describe("Action Tests", () => {
 
       // Picking a random player
       const players = Object.keys(result.current[0].users);
-      [playerName, stealerName] = shuffleArray(players);
+      [playerName, stealerName, stealer2] = shuffleArray(players);
     });
     describe.skip("Build road", () => {
-      it("Builds it correctly", () => {
+      it.skip("Builds it correctly", () => {
         // Add the resources to make sure the user has the necessary resources to buy
         act(() => {
           giveResourcesToPlayer(
@@ -150,49 +152,30 @@ describe("Action Tests", () => {
           errorResources
         );
       });
-      describe("Review steal", () => {
+      describe.skip("Review steal", () => {
         it.skip("Resolves when stealer uses stolen resource needed for purchase.", () => {
-          // Add resources stealerName
-          act(() => {
-            giveResourcesToPlayer(
+          // Initialize resources and theft
+          act(() =>
+            givePlayersInitialResources(
               result.current[1],
-              stealerName,
-              [ResourceType.BRICK, ResourceType.WHEAT],
-              result.current[0].users[stealerName].config.color
-            );
-          });
-          // Add resources playerName
-          act(() => {
-            giveResourcesToPlayer(
-              result.current[1],
-              playerName,
-              [ResourceType.WOOD, ResourceType.SHEEP],
-              result.current[0].users[playerName].config.color
-            );
-          });
+              {
+                [stealerName]: [ResourceType.BRICK, ResourceType.WHEAT],
+                [playerName]: [ResourceType.WOOD, ResourceType.SHEEP],
+              },
+              result.current[0].users
+            )
+          );
           // Unknown steal occurred
           act(() =>
             unknownSteal(
               result.current[1],
               playerName,
               stealerName,
-              result.current[0].users[playerName].config.color
+              result.current[0].users[stealerName].config.color
             )
           );
           // Check the theft record
           expect(result.current[0].thefts).toHaveLength(1);
-          expect(result.current[0].thefts).toStrictEqual([
-            {
-              who: {
-                stealer: stealerName,
-                victim: playerName,
-              },
-              what: {
-                [ResourceType.WOOD]: 1,
-                [ResourceType.SHEEP]: 1,
-              },
-            },
-          ]);
           // Purchases a road
           act(() => {
             playerMakesPurchase(
@@ -208,63 +191,41 @@ describe("Action Tests", () => {
 
           // Check players resources
           expect(result.current[0].users[stealerName].resources).toStrictEqual({
-            [ResourceType.WOOD]: 0,
+            ...emptyResources,
             [ResourceType.WHEAT]: 1,
-            [ResourceType.BRICK]: 0,
-            [ResourceType.SHEEP]: 0,
-            [ResourceType.STONE]: 0,
           });
           expect(result.current[0].users[playerName].resources).toStrictEqual({
-            [ResourceType.WOOD]: 0,
-            [ResourceType.WHEAT]: 0,
-            [ResourceType.BRICK]: 0,
+            ...emptyResources,
             [ResourceType.SHEEP]: 1,
-            [ResourceType.STONE]: 0,
           });
         });
         it.skip("Resolves when victim uses possible stolen resource needed for purchase.", () => {
-          // Add resources stealerName
-          act(() => {
-            giveResourcesToPlayer(
+          // Initialize resources and theft
+          act(() =>
+            givePlayersInitialResources(
               result.current[1],
-              stealerName,
-              [ResourceType.BRICK, ResourceType.WHEAT],
-              result.current[0].users[stealerName].config.color
-            );
-          });
-          // Add resources playerName
-          act(() => {
-            giveResourcesToPlayer(
-              result.current[1],
-              playerName,
-              [ResourceType.WOOD, ResourceType.BRICK, ResourceType.SHEEP],
-              result.current[0].users[playerName].config.color
-            );
-          });
+              {
+                [stealerName]: [ResourceType.BRICK, ResourceType.WHEAT],
+                [playerName]: [
+                  ResourceType.WOOD,
+                  ResourceType.BRICK,
+                  ResourceType.SHEEP,
+                ],
+              },
+              result.current[0].users
+            )
+          );
           // Unknown steal occurred
           act(() =>
             unknownSteal(
               result.current[1],
               playerName,
               stealerName,
-              result.current[0].users[playerName].config.color
+              result.current[0].users[stealerName].config.color
             )
           );
           // Check the theft record
           expect(result.current[0].thefts).toHaveLength(1);
-          expect(result.current[0].thefts).toStrictEqual([
-            {
-              who: {
-                stealer: stealerName,
-                victim: playerName,
-              },
-              what: {
-                [ResourceType.WOOD]: 1,
-                [ResourceType.BRICK]: 1,
-                [ResourceType.SHEEP]: 1,
-              },
-            },
-          ]);
           // Purchases a road
           act(() => {
             playerMakesPurchase(
@@ -289,48 +250,33 @@ describe("Action Tests", () => {
             emptyResources
           );
         });
-        it("Does not resolves when stealer does not use stolen resource needed for purchase.", () => {
-          // Add resources stealerName
-          act(() => {
-            giveResourcesToPlayer(
+        it.skip("Does not resolves when stealer does not use stolen resource needed for purchase.", () => {
+          // Initialize resources and theft
+          act(() =>
+            givePlayersInitialResources(
               result.current[1],
-              stealerName,
-              [ResourceType.WOOD, ResourceType.BRICK, ResourceType.WHEAT],
-              result.current[0].users[stealerName].config.color
-            );
-          });
-          // Add resources playerName
-          act(() => {
-            giveResourcesToPlayer(
-              result.current[1],
-              playerName,
-              [ResourceType.STONE, ResourceType.SHEEP],
-              result.current[0].users[playerName].config.color
-            );
-          });
+              {
+                [stealerName]: [
+                  ResourceType.WOOD,
+                  ResourceType.BRICK,
+                  ResourceType.WHEAT,
+                ],
+                [playerName]: [ResourceType.STONE, ResourceType.SHEEP],
+              },
+              result.current[0].users
+            )
+          );
           // Unknown steal occurred
           act(() =>
             unknownSteal(
               result.current[1],
               playerName,
               stealerName,
-              result.current[0].users[playerName].config.color
+              result.current[0].users[stealerName].config.color
             )
           );
           // Check the theft record
           expect(result.current[0].thefts).toHaveLength(1);
-          expect(result.current[0].thefts).toStrictEqual([
-            {
-              who: {
-                stealer: stealerName,
-                victim: playerName,
-              },
-              what: {
-                [ResourceType.STONE]: 1,
-                [ResourceType.SHEEP]: 1,
-              },
-            },
-          ]);
           // Purchases a road
           act(() => {
             playerMakesPurchase(
@@ -370,32 +316,25 @@ describe("Action Tests", () => {
             [ResourceType.STONE]: 1,
           });
         });
-        it("Does not resolves when victim not use stolen resource needed for purchase.", () => {
-          // Add resources stealerName
-          act(() => {
-            giveResourcesToPlayer(
+        it.skip("Does not resolves when victim not use stolen resource needed for purchase.", () => {
+          // Initialize resources and theft
+          act(() =>
+            givePlayersInitialResources(
               result.current[1],
-              playerName,
-              [ResourceType.SHEEP, ResourceType.WHEAT],
-              result.current[0].users[stealerName].config.color
-            );
-          });
-          // Add resources playerName
-          act(() => {
-            giveResourcesToPlayer(
-              result.current[1],
-              stealerName,
-              [ResourceType.STONE, ResourceType.SHEEP],
-              result.current[0].users[playerName].config.color
-            );
-          });
+              {
+                [stealerName]: [ResourceType.STONE, ResourceType.SHEEP],
+                [playerName]: [ResourceType.SHEEP, ResourceType.WHEAT],
+              },
+              result.current[0].users
+            )
+          );
           // Unknown steal occurred
           act(() =>
             unknownSteal(
               result.current[1],
               playerName,
               stealerName,
-              result.current[0].users[playerName].config.color
+              result.current[0].users[stealerName].config.color
             )
           );
           // Give road resources to playerName
@@ -460,8 +399,77 @@ describe("Action Tests", () => {
             [ResourceType.STONE]: 1,
           });
         });
-        it("Possible stolen resources are diminished when victim purchases with possible stolen resource", () => {});
-        it("Checks the available resources in play to resolve theft.", () => {});
+        it.skip("Possible stolen resources are diminished when victim purchases with possible stolen resource", () => {
+          // Initialize resources and theft
+          act(() =>
+            givePlayersInitialResources(
+              result.current[1],
+              {
+                [stealerName]: [ResourceType.STONE, ResourceType.SHEEP],
+                [playerName]: [
+                  ResourceType.WOOD,
+                  ResourceType.BRICK,
+                  ResourceType.WHEAT,
+                  ResourceType.STONE,
+                  ResourceType.SHEEP,
+                ],
+              },
+              result.current[0].users
+            )
+          );
+          // Unknown steal occurred
+          act(() =>
+            unknownSteal(
+              result.current[1],
+              playerName,
+              stealerName,
+              result.current[0].users[stealerName].config.color
+            )
+          );
+          // Check the theft record
+          expect(result.current[0].thefts).toHaveLength(1);
+          // Purchases a road
+          act(() => {
+            playerMakesPurchase(
+              result.current[1],
+              playerName,
+              PurchaseType.ROAD,
+              result.current[0].users[playerName].config.color
+            );
+          });
+          // Check the theft record
+          expect(result.current[0].thefts).toHaveLength(1);
+          expect(result.current[0].thefts).toStrictEqual([
+            {
+              who: {
+                stealer: stealerName,
+                victim: playerName,
+              },
+              what: {
+                [ResourceType.WHEAT]: 1,
+                [ResourceType.SHEEP]: 1,
+                [ResourceType.STONE]: 1,
+              },
+            },
+          ]);
+
+          // Check players resources
+          expect(result.current[0].users[stealerName].resources).toStrictEqual({
+            [ResourceType.WOOD]: 0,
+            [ResourceType.WHEAT]: 0,
+            [ResourceType.BRICK]: 0,
+            [ResourceType.SHEEP]: 1,
+            [ResourceType.STONE]: 1,
+          });
+          expect(result.current[0].users[playerName].resources).toStrictEqual({
+            [ResourceType.WOOD]: 0,
+            [ResourceType.WHEAT]: 1,
+            [ResourceType.BRICK]: 0,
+            [ResourceType.SHEEP]: 1,
+            [ResourceType.STONE]: 1,
+          });
+        });
+        it.skip("Checks the available resources in play to resolve theft. (Double steal)", () => {});
       });
     });
     describe.skip("Build settlement", () => {
@@ -495,7 +503,320 @@ describe("Action Tests", () => {
           errorResources
         );
       });
-      describe("Resolves steal", () => {});
+      describe("Resolves steal", () => {
+        it.skip("Resolves when stealer uses stolen resource needed for purchase.", () => {
+          // Initialize resources and theft
+          act(() =>
+            givePlayersInitialResources(
+              result.current[1],
+              {
+                [stealerName]: [
+                  ResourceType.BRICK,
+                  ResourceType.WHEAT,
+                  ResourceType.WOOD,
+                ],
+                [playerName]: [
+                  ResourceType.WOOD,
+                  ResourceType.SHEEP,
+                  ResourceType.WHEAT,
+                ],
+              },
+              result.current[0].users
+            )
+          );
+          // Unknown steal occurred
+          act(() =>
+            unknownSteal(
+              result.current[1],
+              playerName,
+              stealerName,
+              result.current[0].users[stealerName].config.color
+            )
+          );
+          // Check the theft record
+          expect(result.current[0].thefts).toHaveLength(1);
+          // Purchases a settlement
+          act(() => {
+            playerMakesPurchase(
+              result.current[1],
+              stealerName,
+              PurchaseType.SETTLEMENT,
+              result.current[0].users[stealerName].config.color
+            );
+          });
+          // Check the theft record
+          expect(result.current[0].thefts).toHaveLength(0);
+          expect(result.current[0].thefts).toStrictEqual([]);
+
+          // Check players resources
+          expect(result.current[0].users[stealerName].resources).toStrictEqual(
+            emptyResources
+          );
+          expect(result.current[0].users[playerName].resources).toStrictEqual({
+            ...emptyResources,
+            [ResourceType.WOOD]: 1,
+            [ResourceType.WHEAT]: 1,
+          });
+        });
+        it.skip("Resolves when victim uses possible stolen resource needed for purchase.", () => {
+          // Initialize resources and theft
+          act(() =>
+            givePlayersInitialResources(
+              result.current[1],
+              {
+                [stealerName]: [
+                  ResourceType.BRICK,
+                  ResourceType.WHEAT,
+                  ResourceType.WOOD,
+                ],
+                [playerName]: [
+                  ResourceType.WOOD,
+                  ResourceType.BRICK,
+                  ResourceType.SHEEP,
+                  ResourceType.WHEAT,
+                  ResourceType.STONE,
+                ],
+              },
+              result.current[0].users
+            )
+          );
+          // Unknown steal occurred
+          act(() =>
+            unknownSteal(
+              result.current[1],
+              playerName,
+              stealerName,
+              result.current[0].users[stealerName].config.color
+            )
+          );
+          // Check the theft record
+          expect(result.current[0].thefts).toHaveLength(1);
+          // Purchases a settlement
+          act(() => {
+            playerMakesPurchase(
+              result.current[1],
+              playerName,
+              PurchaseType.SETTLEMENT,
+              result.current[0].users[stealerName].config.color
+            );
+          });
+          // Theft should be resolved
+          expect(result.current[0].thefts).toHaveLength(0);
+          expect(result.current[0].thefts).toStrictEqual([]);
+          // Check players resources
+          expect(result.current[0].users[stealerName].resources).toStrictEqual({
+            ...emptyResources,
+            [ResourceType.WOOD]: 1,
+            [ResourceType.WHEAT]: 1,
+            [ResourceType.BRICK]: 1,
+            [ResourceType.STONE]: 1,
+          });
+          expect(result.current[0].users[playerName].resources).toStrictEqual(
+            emptyResources
+          );
+        });
+        it.skip("Does not resolves when stealer does not use stolen resource needed for purchase.", () => {
+          // Initialize resources and theft
+          act(() =>
+            givePlayersInitialResources(
+              result.current[1],
+              {
+                [stealerName]: [
+                  ResourceType.WOOD,
+                  ResourceType.BRICK,
+                  ResourceType.WHEAT,
+                  ResourceType.SHEEP,
+                ],
+                [playerName]: [
+                  ResourceType.STONE,
+                  ResourceType.SHEEP,
+                  ResourceType.SHEEP,
+                ],
+              },
+              result.current[0].users
+            )
+          );
+          // Unknown steal occurred
+          act(() =>
+            unknownSteal(
+              result.current[1],
+              playerName,
+              stealerName,
+              result.current[0].users[stealerName].config.color
+            )
+          );
+          // Check the theft record
+          expect(result.current[0].thefts).toHaveLength(1);
+          // Purchases a settlement
+          act(() => {
+            playerMakesPurchase(
+              result.current[1],
+              stealerName,
+              PurchaseType.SETTLEMENT,
+              result.current[0].users[stealerName].config.color
+            );
+          });
+          // Check the theft record
+          expect(result.current[0].thefts).toHaveLength(1);
+          expect(result.current[0].thefts).toStrictEqual([
+            {
+              who: {
+                stealer: stealerName,
+                victim: playerName,
+              },
+              what: {
+                [ResourceType.STONE]: 1,
+                [ResourceType.SHEEP]: 1,
+              },
+            },
+          ]);
+          // Check players resources
+          expect(result.current[0].users[stealerName].resources).toStrictEqual({
+            ...emptyResources,
+          });
+          expect(result.current[0].users[playerName].resources).toStrictEqual({
+            ...emptyResources,
+            [ResourceType.SHEEP]: 2,
+            [ResourceType.STONE]: 1,
+          });
+        });
+        it.skip("Does not resolves when victim not use stolen resource needed for purchase.", () => {
+          // Initialize resources and theft
+          act(() =>
+            givePlayersInitialResources(
+              result.current[1],
+              {
+                [stealerName]: [ResourceType.STONE, ResourceType.SHEEP],
+                [playerName]: [ResourceType.STONE, ResourceType.WHEAT],
+              },
+              result.current[0].users
+            )
+          );
+          // Unknown steal occurred
+          act(() =>
+            unknownSteal(
+              result.current[1],
+              playerName,
+              stealerName,
+              result.current[0].users[stealerName].config.color
+            )
+          );
+          // Give settlement resources to playerName
+          act(() => {
+            giveResourcesToPlayer(
+              result.current[1],
+              playerName,
+              testData.purchase.SETTLEMENT,
+              result.current[0].users[stealerName].config.color
+            );
+          });
+          // Check the theft record
+          expect(result.current[0].thefts).toHaveLength(1);
+          // Purchases a road
+          act(() => {
+            playerMakesPurchase(
+              result.current[1],
+              playerName,
+              PurchaseType.SETTLEMENT,
+              result.current[0].users[playerName].config.color
+            );
+          });
+          // Check the theft record
+          expect(result.current[0].thefts).toHaveLength(1);
+          expect(result.current[0].thefts).toStrictEqual([
+            {
+              who: {
+                stealer: stealerName,
+                victim: playerName,
+              },
+              what: {
+                [ResourceType.WHEAT]: 1,
+                [ResourceType.STONE]: 1,
+              },
+            },
+          ]);
+          // Check players resources
+          expect(result.current[0].users[playerName].resources).toStrictEqual({
+            ...emptyResources,
+            [ResourceType.WHEAT]: 1,
+            [ResourceType.STONE]: 1,
+          });
+          expect(result.current[0].users[stealerName].resources).toStrictEqual({
+            ...emptyResources,
+            [ResourceType.SHEEP]: 1,
+            [ResourceType.STONE]: 1,
+          });
+        });
+        it.skip("Possible stolen resources are diminished when victim purchases with possible stolen resource", () => {
+          // Initialize resources and theft
+          act(() =>
+            givePlayersInitialResources(
+              result.current[1],
+              {
+                [stealerName]: [ResourceType.SHEEP],
+                [playerName]: [
+                  ResourceType.WOOD,
+                  ResourceType.BRICK,
+                  ResourceType.BRICK,
+                  ResourceType.WHEAT,
+                  ResourceType.WHEAT,
+                  ResourceType.STONE,
+                  ResourceType.SHEEP,
+                ],
+              },
+              result.current[0].users
+            )
+          );
+          // Unknown steal occurred
+          act(() =>
+            unknownSteal(
+              result.current[1],
+              playerName,
+              stealerName,
+              result.current[0].users[stealerName].config.color
+            )
+          );
+          // Check the theft record
+          expect(result.current[0].thefts).toHaveLength(1);
+          // Purchases a settlement
+          act(() => {
+            playerMakesPurchase(
+              result.current[1],
+              playerName,
+              PurchaseType.SETTLEMENT,
+              result.current[0].users[playerName].config.color
+            );
+          });
+          // Check the theft record
+          expect(result.current[0].thefts).toHaveLength(1);
+          expect(result.current[0].thefts).toStrictEqual([
+            {
+              who: {
+                stealer: stealerName,
+                victim: playerName,
+              },
+              what: {
+                [ResourceType.WHEAT]: 1,
+                [ResourceType.BRICK]: 1,
+                [ResourceType.STONE]: 1,
+              },
+            },
+          ]);
+
+          // Check players resources
+          expect(result.current[0].users[stealerName].resources).toStrictEqual({
+            ...emptyResources,
+            [ResourceType.SHEEP]: 1,
+          });
+          expect(result.current[0].users[playerName].resources).toStrictEqual({
+            ...emptyResources,
+            [ResourceType.WHEAT]: 1,
+            [ResourceType.BRICK]: 1,
+            [ResourceType.STONE]: 1,
+          });
+        });
+        it.skip("Checks the available resources in play to resolve theft. (Double steal)", () => {});
+      });
     });
     describe.skip("Build city", () => {
       it("Builds it correctly", () => {
@@ -530,7 +851,7 @@ describe("Action Tests", () => {
       });
       describe("Resolves steal", () => {});
     });
-    describe.skip("Buys development card", () => {
+    describe("Buys development card", () => {
       it("Buys it correctly", () => {
         // Add the resources to make sure the user has the necessary resources to buy
         act(() => {
@@ -561,7 +882,305 @@ describe("Action Tests", () => {
           errorResources
         );
       });
-      describe("Resolves steal", () => {});
+      describe("Resolves steal", () => {
+        it.skip("Resolves when stealer uses stolen resource needed for purchase.", () => {
+          // Initialize resources and theft
+          act(() =>
+            givePlayersInitialResources(
+              result.current[1],
+              {
+                [stealerName]: [
+                  ResourceType.STONE,
+                  ResourceType.WHEAT,
+                  ResourceType.WHEAT,
+                ],
+                [playerName]: [ResourceType.WOOD, ResourceType.SHEEP],
+              },
+              result.current[0].users
+            )
+          );
+          // Unknown steal occurred
+          act(() =>
+            unknownSteal(
+              result.current[1],
+              playerName,
+              stealerName,
+              result.current[0].users[stealerName].config.color
+            )
+          );
+          // Check the theft record
+          expect(result.current[0].thefts).toHaveLength(1);
+          // Purchases a development card
+          act(() => {
+            playerMakesPurchase(
+              result.current[1],
+              stealerName,
+              PurchaseType.DEVELOPMENT,
+              result.current[0].users[stealerName].config.color
+            );
+          });
+          // Check the theft record
+          expect(result.current[0].thefts).toHaveLength(0);
+          expect(result.current[0].thefts).toStrictEqual([]);
+
+          // Check players resources
+          expect(result.current[0].users[stealerName].resources).toStrictEqual({
+            ...emptyResources,
+            [ResourceType.WHEAT]: 1,
+          });
+          expect(result.current[0].users[playerName].resources).toStrictEqual({
+            ...emptyResources,
+            [ResourceType.WOOD]: 1,
+          });
+        });
+        it.skip("Resolves when victim uses possible stolen resource needed for purchase.", () => {
+          // Initialize resources and theft
+          act(() =>
+            givePlayersInitialResources(
+              result.current[1],
+              {
+                [stealerName]: [ResourceType.BRICK, ResourceType.WHEAT],
+                [playerName]: [
+                  ResourceType.BRICK,
+                  ResourceType.SHEEP,
+                  ResourceType.STONE,
+                  ResourceType.WHEAT,
+                ],
+              },
+              result.current[0].users
+            )
+          );
+          // Unknown steal occurred
+          act(() =>
+            unknownSteal(
+              result.current[1],
+              playerName,
+              stealerName,
+              result.current[0].users[stealerName].config.color
+            )
+          );
+          // Check the theft record
+          expect(result.current[0].thefts).toHaveLength(1);
+          // Purchases a development card
+          act(() => {
+            playerMakesPurchase(
+              result.current[1],
+              playerName,
+              PurchaseType.DEVELOPMENT,
+              result.current[0].users[stealerName].config.color
+            );
+          });
+          // Theft should be resolved
+          expect(result.current[0].thefts).toHaveLength(0);
+          expect(result.current[0].thefts).toStrictEqual([]);
+          // Check players resources
+          expect(result.current[0].users[stealerName].resources).toStrictEqual({
+            ...emptyResources,
+            [ResourceType.WHEAT]: 1,
+            [ResourceType.BRICK]: 2,
+          });
+          expect(result.current[0].users[playerName].resources).toStrictEqual(
+            emptyResources
+          );
+        });
+        it.skip("Does not resolve when stealer does not use stolen resource needed for purchase.", () => {
+          // Initialize resources and theft
+          act(() =>
+            givePlayersInitialResources(
+              result.current[1],
+              {
+                [stealerName]: [
+                  ResourceType.SHEEP,
+                  ResourceType.STONE,
+                  ResourceType.WHEAT,
+                ],
+                [playerName]: [
+                  ResourceType.WOOD,
+                  ResourceType.BRICK,
+                  ResourceType.BRICK,
+                ],
+              },
+              result.current[0].users
+            )
+          );
+          // Unknown steal occurred
+          act(() =>
+            unknownSteal(
+              result.current[1],
+              playerName,
+              stealerName,
+              result.current[0].users[stealerName].config.color
+            )
+          );
+          // Check the theft record
+          expect(result.current[0].thefts).toHaveLength(1);
+          // Purchases a development card
+          act(() => {
+            playerMakesPurchase(
+              result.current[1],
+              stealerName,
+              PurchaseType.DEVELOPMENT,
+              result.current[0].users[stealerName].config.color
+            );
+          });
+          // Check the theft record
+          expect(result.current[0].thefts).toHaveLength(1);
+          expect(result.current[0].thefts).toStrictEqual([
+            {
+              who: {
+                stealer: stealerName,
+                victim: playerName,
+              },
+              what: {
+                [ResourceType.WOOD]: 1,
+                [ResourceType.BRICK]: 1,
+              },
+            },
+          ]);
+          // Check players resources
+          expect(result.current[0].users[stealerName].resources).toStrictEqual(
+            emptyResources
+          );
+          expect(result.current[0].users[playerName].resources).toStrictEqual({
+            ...emptyResources,
+            [ResourceType.WOOD]: 1,
+            [ResourceType.BRICK]: 2,
+          });
+        });
+        it.skip("Does not resolves when victim not use stolen resource needed for purchase.", () => {
+          // Initialize resources and theft
+          act(() =>
+            givePlayersInitialResources(
+              result.current[1],
+              {
+                [stealerName]: [ResourceType.STONE, ResourceType.WHEAT],
+                [playerName]: [ResourceType.BRICK, ResourceType.WOOD],
+              },
+              result.current[0].users
+            )
+          );
+          // Unknown steal occurred
+          act(() =>
+            unknownSteal(
+              result.current[1],
+              playerName,
+              stealerName,
+              result.current[0].users[stealerName].config.color
+            )
+          );
+          // Give development resource to playerName
+          act(() => {
+            giveResourcesToPlayer(
+              result.current[1],
+              playerName,
+              testData.purchase.DEVELOPMENT,
+              result.current[0].users[stealerName].config.color
+            );
+          });
+          // Check the theft record
+          expect(result.current[0].thefts).toHaveLength(1);
+          // Purchases a development card
+          act(() => {
+            playerMakesPurchase(
+              result.current[1],
+              playerName,
+              PurchaseType.DEVELOPMENT,
+              result.current[0].users[playerName].config.color
+            );
+          });
+          // Check the theft record
+          expect(result.current[0].thefts).toHaveLength(1);
+          expect(result.current[0].thefts).toStrictEqual([
+            {
+              who: {
+                stealer: stealerName,
+                victim: playerName,
+              },
+              what: {
+                [ResourceType.BRICK]: 1,
+                [ResourceType.WOOD]: 1,
+              },
+            },
+          ]);
+          // Check players resources
+          expect(result.current[0].users[playerName].resources).toStrictEqual({
+            ...emptyResources,
+            [ResourceType.WOOD]: 1,
+            [ResourceType.BRICK]: 1,
+          });
+          expect(result.current[0].users[stealerName].resources).toStrictEqual({
+            ...emptyResources,
+            [ResourceType.WHEAT]: 1,
+            [ResourceType.STONE]: 1,
+          });
+        });
+        it.skip("Possible stolen resources are diminished when victim purchases with possible stolen resource", () => {
+          // Initialize resources and theft
+          act(() =>
+            givePlayersInitialResources(
+              result.current[1],
+              {
+                [stealerName]: [ResourceType.WOOD, ResourceType.STONE],
+                [playerName]: [
+                  ResourceType.WOOD,
+                  ResourceType.BRICK,
+                  ResourceType.WHEAT,
+                  ResourceType.STONE,
+                  ResourceType.SHEEP,
+                ],
+              },
+              result.current[0].users
+            )
+          );
+          // Unknown steal occurred
+          act(() =>
+            unknownSteal(
+              result.current[1],
+              playerName,
+              stealerName,
+              result.current[0].users[stealerName].config.color
+            )
+          );
+          // Check the theft record
+          expect(result.current[0].thefts).toHaveLength(1);
+          // Purchases a development card
+          act(() => {
+            playerMakesPurchase(
+              result.current[1],
+              playerName,
+              PurchaseType.DEVELOPMENT,
+              result.current[0].users[playerName].config.color
+            );
+          });
+          // Check the theft record
+          expect(result.current[0].thefts).toHaveLength(1);
+          expect(result.current[0].thefts).toStrictEqual([
+            {
+              who: {
+                stealer: stealerName,
+                victim: playerName,
+              },
+              what: {
+                [ResourceType.WOOD]: 1,
+                [ResourceType.BRICK]: 1,
+              },
+            },
+          ]);
+
+          // Check players resources
+          expect(result.current[0].users[stealerName].resources).toStrictEqual({
+            ...emptyResources,
+            [ResourceType.WOOD]: 1,
+            [ResourceType.STONE]: 1,
+          });
+          expect(result.current[0].users[playerName].resources).toStrictEqual({
+            ...emptyResources,
+            [ResourceType.WOOD]: 1,
+            [ResourceType.BRICK]: 1,
+          });
+        });
+        it.skip("Checks the available resources in play to resolve theft. (Double steal)", () => {});
+      });
     });
   });
   describe.skip("Trading works as expected", () => {
@@ -855,12 +1474,13 @@ describe("Action Tests", () => {
   });
   describe.skip("Discard cards", () => {
     let playerDiscarding: string;
+    let stealerName: string;
     beforeEach(() => {
       // Creates the players and its initial resources
       act(() => initiateTestingPlayers(result.current[1], true));
       // Picking a random player
       const players = Object.keys(result.current[0].users);
-      playerDiscarding = shuffleArray(players)[0];
+      [playerDiscarding, stealerName] = shuffleArray(players);
     });
 
     it("SuccessFully discards cards", () => {

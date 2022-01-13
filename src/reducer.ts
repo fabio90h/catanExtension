@@ -502,36 +502,42 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
       }
 
       // CHECK IF RESOURCES ARE IN PLAY
-      for (const resource in ResourceType) {
-        const totalResourceInPlay = Object.values(users).reduce(
-          (acc, curr) => acc + curr[resource],
-          0
-        );
+      // Does not work for purchase
+      // for (const resource in ResourceType) {
+      //   const totalResourceInPlay = Object.values(users).reduce(
+      //     (acc, curr) => acc + curr.resources[resource],
+      //     0
+      //   );
 
-        if (totalResourceInPlay === 0) {
-          for (let i = 0; i < thefts.length; i++) {
-            delete thefts[i].what[resource];
+      //   console.log("totalResourceInPlay", resource, totalResourceInPlay);
 
-            const remainingOptions = Object.keys(
-              thefts[i].what
-            ) as ResourceType[];
-            if (remainingOptions.length === 1) {
-              users = exchangeResourcesPure(
-                users,
-                thefts[i].who.victim,
-                thefts[i].who.stealer,
-                remainingOptions
-              );
-              // Resolve theft
-              thefts.splice(i, 1);
-              console.log(
-                "Theft solved! Based on how many resources are in play",
-                thefts[i]
-              );
-            }
-          }
-        }
-      }
+      //   if (totalResourceInPlay === 0) {
+      //     for (let i = 0; i < thefts.length; i++) {
+      //       delete thefts[i].what[resource];
+
+      //       console.log("thefts", thefts[i].what, resource);
+
+      //       const remainingOptions = Object.keys(
+      //         thefts[i].what
+      //       ) as ResourceType[];
+      //       if (remainingOptions.length === 1) {
+      //         users = exchangeResourcesPure(
+      //           users,
+      //           thefts[i].who.victim,
+      //           thefts[i].who.stealer,
+      //           remainingOptions
+      //         );
+
+      //         console.log(
+      //           "Theft solved! Based on how many resources are in play",
+      //           thefts[i]
+      //         );
+      //         // Resolve theft
+      //         thefts.splice(i, 1);
+      //       }
+      //     }
+      //   }
+      // }
 
       return { users, thefts };
     }
