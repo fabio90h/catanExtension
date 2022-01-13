@@ -223,12 +223,12 @@ export const playerMakesPurchase = (
   });
   createChildImgElement(node, purchaseType);
 
-  // Guard to make sure that are no negatives in the resource
-  if (
-    Object.values(tempResources).every((resourceAmount) => resourceAmount >= 0)
-  ) {
-    parsePurchase(node, dipatch);
-  }
+  //   // Guard to make sure that are no negatives in the resource
+  //   if (
+  //     Object.values(tempResources).every((resourceAmount) => resourceAmount >= 0)
+  //   ) {
+  parsePurchase(node, dipatch);
+  //   }
   return tempResources;
 };
 

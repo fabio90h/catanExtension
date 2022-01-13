@@ -492,8 +492,8 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
                   remainingResourcePossibilities
                 );
                 // Resolve theft
-                thefts.splice(i, 1);
                 console.log("Theft solved!", thefts[i]);
+                thefts.splice(i, 1);
               }
               break;
             }
