@@ -188,28 +188,22 @@ export const giveResourcesToPlayer = (
   dipatch: React.Dispatch<Action>,
   user: string,
   addedResouces: ResourceType[],
-  userResources: UserResources,
   color: string
 ) => {
-  const tempResources = { ...userResources };
   const node = createDivElement(color, user, keywords.receivedResourcesSnippet);
   addedResouces.forEach((resource) => {
     createChildImgElement(node, resource);
-    tempResources[resource] += 1;
   });
 
   parseGot(node, dipatch);
-  return tempResources;
 };
 
 export const playerMakesPurchase = (
   dipatch: React.Dispatch<Action>,
   user: string,
   purchaseType: PurchaseType,
-  userResources: UserResources,
   color: string
 ) => {
-  const tempResources = { ...userResources };
   const node = createDivElement(
     color,
     user,
@@ -218,18 +212,9 @@ export const playerMakesPurchase = (
       : keywords.builtSnippet
   );
 
-  testData.purchase[purchaseType].forEach((resource) => {
-    tempResources[resource] -= 1;
-  });
   createChildImgElement(node, purchaseType);
 
-  //   // Guard to make sure that are no negatives in the resource
-  //   if (
-  //     Object.values(tempResources).every((resourceAmount) => resourceAmount >= 0)
-  //   ) {
   parsePurchase(node, dipatch);
-  //   }
-  return tempResources;
 };
 
 export const bankTrade = (
@@ -237,16 +222,12 @@ export const bankTrade = (
   user: string,
   gave: ResourceType[],
   took: ResourceType[],
-  userResources: UserResources,
   color: string
 ) => {
-  const tempResources = { ...userResources };
-
   const node = createDivElement(color, user, keywords.tradeBankGaveSnippet);
 
   gave.forEach((resource) => {
     createChildImgElement(node, resource);
-    tempResources[resource] -= 1;
   });
 
   const textNode = document.createTextNode(keywords.tradeBankTookSnippet);
@@ -254,11 +235,9 @@ export const bankTrade = (
 
   took.forEach((resource) => {
     createChildImgElement(node, resource);
-    tempResources[resource] += 1;
   });
 
   parseBankTrade(node, dispatch);
-  return tempResources;
 };
 
 export const playerTrade = (
