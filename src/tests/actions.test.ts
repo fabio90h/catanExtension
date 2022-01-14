@@ -22,8 +22,7 @@ import {
   stoleFromOrByYou,
   unknownSteal,
   givePlayersInitialResources,
-  offerPurposal,
-  countResourceInPlay,
+  maxMonopolyGain,
 } from "./utils";
 import testData from "./data";
 
@@ -2161,16 +2160,25 @@ describe("Action Tests", () => {
             result.current[0].users[playerPlayingMonopoly].config.color
           )
         );
+        // Unknown steal occurred
+        act(() =>
+          unknownSteal(
+            result.current[1],
+            player3,
+            playerPlayingMonopoly,
+            result.current[0].users[playerPlayingMonopoly].config.color
+          )
+        );
         // Check the theft record
-        expect(result.current[0].thefts).toHaveLength(1);
-        // Trade with player
+        expect(result.current[0].thefts).toHaveLength(2);
+        // Play monopoly
         act(() => {
           monopoly(
             result.current[1],
             playerPlayingMonopoly,
-            result.current[0].users[stealerName].config.color,
+            result.current[0].users[playerPlayingMonopoly].config.color,
             ResourceType.WHEAT,
-            countResourceInPlay(
+            maxMonopolyGain(
               [
                 ...usersResources[playerName],
                 ...usersResources[stealerName],
@@ -2193,84 +2201,112 @@ describe("Action Tests", () => {
           result.current[0].users[playerPlayingMonopoly].resources
         ).toStrictEqual({
           ...emptyResources,
-          [ResourceType.BRICK]: 1,
+          [ResourceType.BRICK]: 2,
+          [ResourceType.WOOD]: 1,
           [ResourceType.WHEAT]: 6,
-          [ResourceType.SHEEP]: 1,
           [ResourceType.STONE]: 1,
+          [ResourceType.SHEEP]: 1,
         });
         expect(result.current[0].users[player3].resources).toStrictEqual({
           ...emptyResources,
-          [ResourceType.SHEEP]: 1,
         });
         expect(result.current[0].users[playerName].resources).toStrictEqual({
           ...emptyResources,
         });
       });
-      // it.skip("Resolves when victim plays monopoly", () => {
-      //   const stealerName = offeringPlayer;
-      //   const playerName = agreeingPlayer;
+      it.skip("Resolves when victim plays monopoly", () => {
+        const usersResources = {
+          [playerPlayingMonopoly]: [
+            ResourceType.BRICK,
+            ResourceType.WOOD,
+            ResourceType.BRICK,
+            ResourceType.WOOD,
+            ResourceType.WOOD,
+          ],
+          [playerName]: [
+            ResourceType.WOOD,
+            ResourceType.BRICK,
+            ResourceType.WOOD,
+            ResourceType.WOOD,
+          ],
+          [player3]: [ResourceType.WHEAT, ResourceType.SHEEP],
+          [stealerName]: [
+            ResourceType.WHEAT,
+            ResourceType.WOOD,
+            ResourceType.WOOD,
+            ResourceType.SHEEP,
+          ],
+        };
 
-      //   // Initialize resources and theft
-      //   act(() =>
-      //     givePlayersInitialResources(
-      //       result.current[1],
-      //       {
-      //         [stealerName]: [
-      //           ResourceType.BRICK,
-      //           ResourceType.SHEEP,
-      //           ResourceType.STONE,
-      //         ],
-      //         [playerName]: [
-      //           ResourceType.WHEAT,
-      //           ResourceType.WHEAT,
-      //           ResourceType.WHEAT,
-      //           ResourceType.WOOD,
-      //           ResourceType.SHEEP,
-      //         ],
-      //       },
-      //       result.current[0].users
-      //     )
-      //   );
-      //   // Unknown steal occurred
-      //   act(() =>
-      //     unknownSteal(
-      //       result.current[1],
-      //       playerName,
-      //       stealerName,
-      //       result.current[0].users[stealerName].config.color
-      //     )
-      //   );
-      //   // Check the theft record
-      //   expect(result.current[0].thefts).toHaveLength(1);
+        // Initialize resources and theft
+        act(() =>
+          givePlayersInitialResources(
+            result.current[1],
+            usersResources,
+            result.current[0].users
+          )
+        );
+        // Unknown steal occurred
+        act(() =>
+          unknownSteal(
+            result.current[1],
+            playerPlayingMonopoly,
+            stealerName,
+            result.current[0].users[playerPlayingMonopoly].config.color
+          )
+        );
+        // Unknown steal occurred
+        act(() =>
+          unknownSteal(
+            result.current[1],
+            playerPlayingMonopoly,
+            playerName,
+            result.current[0].users[playerPlayingMonopoly].config.color
+          )
+        );
+        // Check the theft record
+        expect(result.current[0].thefts).toHaveLength(2);
 
-      //   // Trade with player
-      //   act(() => {
-      //     playerTrade(
-      //       result.current[1],
-      //       playerName,
-      //       stealerName,
-      //       [ResourceType.SHEEP, ResourceType.WOOD],
-      //       [ResourceType.STONE],
-      //       result.current[0].users[playerName].config.color
-      //     );
-      //   });
-      //   // Theft should be resolved
-      //   expect(result.current[0].thefts).toHaveLength(0);
-      //   expect(result.current[0].thefts).toStrictEqual([]);
-      //   // Check players resources
-      //   expect(result.current[0].users[stealerName].resources).toStrictEqual({
-      //     ...emptyResources,
-      //     [ResourceType.SHEEP]: 2,
-      //     [ResourceType.WHEAT]: 1,
-      //     [ResourceType.BRICK]: 1,
-      //     [ResourceType.WOOD]: 1,
-      //   });
-      //   expect(result.current[0].users[playerName].resources).toStrictEqual({
-      //     ...emptyResources,
-      //     [ResourceType.STONE]: 1,
-      //     [ResourceType.WHEAT]: 2,
-      //   });
-      // });
+        // Trade with player
+        act(() => {
+          monopoly(
+            result.current[1],
+            playerPlayingMonopoly,
+            result.current[0].users[playerPlayingMonopoly].config.color,
+            ResourceType.WOOD,
+            maxMonopolyGain(
+              [
+                ...usersResources[playerName],
+                ...usersResources[stealerName],
+                ...usersResources[player3],
+              ],
+              ResourceType.WOOD
+            )
+          );
+        });
+        // Theft should be resolved
+        expect(result.current[0].thefts).toHaveLength(0);
+        expect(result.current[0].thefts).toStrictEqual([]);
+        // Check players resources
+        expect(result.current[0].users[stealerName].resources).toStrictEqual({
+          ...emptyResources,
+          [ResourceType.BRICK]: 1,
+          [ResourceType.SHEEP]: 1,
+        });
+        expect(
+          result.current[0].users[playerPlayingMonopoly].resources
+        ).toStrictEqual({
+          ...emptyResources,
+          [ResourceType.BRICK]: 2,
+          [ResourceType.WOOD]: 8,
+        });
+        expect(result.current[0].users[player3].resources).toStrictEqual({
+          ...emptyResources,
+        });
+        expect(result.current[0].users[playerName].resources).toStrictEqual({
+          ...emptyResources,
+        });
+      });
       // it.skip("Does not resolve when stealer plays monopoly", () => {
       //   const stealerName = offeringPlayer;
       //   const playerName = agreeingPlayer;

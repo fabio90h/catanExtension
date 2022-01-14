@@ -204,12 +204,14 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
     }
     case ActionType.STEAL_ALL: {
       checkForUserExistance(action.payload.user, state.users);
-      const users: Users = { ...state.users };
+      let users: Users = { ...state.users };
+      let thefts: Theft[] = [...state.thefts];
 
-      const tempResources: UserResources = {
-        ...users[action.payload.user].resources,
-      };
-      const tempConfig: UserConfig = { ...users[action.payload.user].config };
+      const maxPossibleResourcesToGrab =
+        Object.values(users).reduce(
+          (acc, curr) => acc + curr.resources[action.payload.stolenResource],
+          0
+        ) - users[action.payload.user].resources[action.payload.stolenResource];
 
       //Remove resource from each player
       Object.keys(users).forEach((player) => {
@@ -218,18 +220,42 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
       });
 
       //Add the stolen resources to the player
-      tempResources[action.payload.stolenResource] +=
+      users[action.payload.user].resources[action.payload.stolenResource] +=
         action.payload.stoleAmount;
 
+      // RESOLVE THEFT //TODO: CAN BE REFACTORED
+      // Only if the max steals matche the amount it actually stole
+      if (action.payload.stoleAmount === maxPossibleResourcesToGrab) {
+        // Remove any monopolize resource from the theft
+        thefts.forEach(
+          (theft) =>
+            !!theft.what[action.payload.stolenResource] &&
+            delete theft.what[action.payload.stolenResource]
+        );
+
+        // Filter out any "theft.what" with length 1 since we can resolve them
+        thefts = thefts.filter((theft) => {
+          const remainingResourcePossibilities = Object.keys(
+            theft.what
+          ) as ResourceType[];
+
+          if (remainingResourcePossibilities.length === 1) {
+            users = exchangeResourcesPure(
+              users,
+              theft.who.victim,
+              theft.who.stealer,
+              remainingResourcePossibilities
+            );
+            console.log("Theft solved!", theft);
+            return false;
+          }
+          return true;
+        });
+      }
+
       return {
-        ...state,
-        users: {
-          ...users,
-          [action.payload.user]: {
-            resources: tempResources,
-            config: tempConfig,
-          },
-        },
+        thefts,
+        users,
       };
     }
     case ActionType.RESOLVE_UNKNOWN_STEAL: {
@@ -244,9 +270,10 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
       };
     }
     case ActionType.RESOLVE_UNKNOWN_STEAL_WITH_OFFERS: {
+      if (state.thefts.length === 0) return state;
       const thefts = [...state.thefts];
-      let users: Users = { ...state.users };
 
+      let users: Users = { ...state.users };
       const player = action.payload.player;
 
       //Construct a hash of offered resources.
@@ -413,6 +440,7 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
         };
       }
     }
+
     /**
      * ## Should consider:
      * - Stealer or victim offers a deal that couldnt have been possible.
@@ -420,7 +448,7 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
      * - Stealer or victim is able to make a trade with the bank
      * - Stealer or victim discards resource the couldnt have been possible.
      *
-     * - Victim got stolen once. The resource stolen was one and only. Victim gets stolen twice. We know that the previous stolen resource
+     * - **Victim got stolen once. The resource stolen was one and only. Victim gets stolen twice. We know that the previous stolen resource
      *   is not the resource that was stolen.
      *
      * ### This should be executed when:

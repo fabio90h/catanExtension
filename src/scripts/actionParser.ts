@@ -152,21 +152,15 @@ export const parseMonoplyCard = (
     const player = nodeText.split(" ")[0];
     const stoleAmount = parseInt(nodeText.split(keywords.monoplyStole)[1]);
 
-    const stolenResources = parseResourceImage(node);
+    const stolenResource = parseResourceImage(node)[0];
 
     dispatch({
       type: ActionType.STEAL_ALL,
       payload: {
         user: player,
-        stolenResource: stolenResources[0],
+        stolenResource,
         stoleAmount,
       },
-    });
-
-    //Review steals to see if any can be resolved with the purchase action.
-    dispatch({
-      type: ActionType.REVIEW_STEALS,
-      payload: { player },
     });
   }
 };

@@ -218,7 +218,7 @@ export const givePlayersInitialResources = (
   });
 };
 
-export const countResourceInPlay = (
+export const maxMonopolyGain = (
   resourcesInPlay: ResourceType[],
   resourceToCount: ResourceType
 ) => {
