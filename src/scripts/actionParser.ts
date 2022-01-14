@@ -162,6 +162,12 @@ export const parseMonoplyCard = (
         stoleAmount,
       },
     });
+
+    //Review steals to see if any can be resolved with the purchase action.
+    dispatch({
+      type: ActionType.REVIEW_STEALS,
+      payload: { player },
+    });
   }
 };
 

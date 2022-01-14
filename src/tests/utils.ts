@@ -6,6 +6,7 @@ import {
   parseMonoplyCard,
   parsePlayersTrade,
   parsePurchase,
+  parsePurposalMessage,
   parseStoleFromYouMessage,
   parseStoleUnknownMessage,
   parseYearofPlenty,
@@ -188,28 +189,51 @@ export const giveResourcesToPlayer = (
   dipatch: React.Dispatch<Action>,
   user: string,
   addedResouces: ResourceType[],
-  userResources: UserResources,
   color: string
 ) => {
-  const tempResources = { ...userResources };
   const node = createDivElement(color, user, keywords.receivedResourcesSnippet);
   addedResouces.forEach((resource) => {
     createChildImgElement(node, resource);
-    tempResources[resource] += 1;
   });
 
   parseGot(node, dipatch);
-  return tempResources;
+};
+
+/**
+ * Method to give players resources
+ * @param dipatch
+ */
+export const givePlayersInitialResources = (
+  dispatch: React.Dispatch<Action>,
+  playersResources: Record<string, ResourceType[]>,
+  players: Users
+) => {
+  Object.entries(playersResources).forEach(([player, resources]) => {
+    giveResourcesToPlayer(
+      dispatch,
+      player,
+      resources,
+      players[player].config.color
+    );
+  });
+};
+
+export const countResourceInPlay = (
+  resourcesInPlay: ResourceType[],
+  resourceToCount: ResourceType
+) => {
+  return resourcesInPlay.reduce(
+    (acc, resource) => (resourceToCount === resource ? acc + 1 : acc),
+    0
+  );
 };
 
 export const playerMakesPurchase = (
   dipatch: React.Dispatch<Action>,
   user: string,
   purchaseType: PurchaseType,
-  userResources: UserResources,
   color: string
 ) => {
-  const tempResources = { ...userResources };
   const node = createDivElement(
     color,
     user,
@@ -218,18 +242,9 @@ export const playerMakesPurchase = (
       : keywords.builtSnippet
   );
 
-  testData.purchase[purchaseType].forEach((resource) => {
-    tempResources[resource] -= 1;
-  });
   createChildImgElement(node, purchaseType);
 
-  // Guard to make sure that are no negatives in the resource
-  if (
-    Object.values(tempResources).every((resourceAmount) => resourceAmount >= 0)
-  ) {
-    parsePurchase(node, dipatch);
-  }
-  return tempResources;
+  parsePurchase(node, dipatch);
 };
 
 export const bankTrade = (
@@ -237,16 +252,12 @@ export const bankTrade = (
   user: string,
   gave: ResourceType[],
   took: ResourceType[],
-  userResources: UserResources,
   color: string
 ) => {
-  const tempResources = { ...userResources };
-
   const node = createDivElement(color, user, keywords.tradeBankGaveSnippet);
 
   gave.forEach((resource) => {
     createChildImgElement(node, resource);
-    tempResources[resource] -= 1;
   });
 
   const textNode = document.createTextNode(keywords.tradeBankTookSnippet);
@@ -254,13 +265,32 @@ export const bankTrade = (
 
   took.forEach((resource) => {
     createChildImgElement(node, resource);
-    tempResources[resource] += 1;
   });
 
   parseBankTrade(node, dispatch);
-  return tempResources;
 };
+export const offerPurposal = (
+  dispatch: React.Dispatch<Action>,
+  offeringPlayer: string,
+  offer: ResourceType[],
+  want: ResourceType[],
+  color: string
+) => {
+  const node = createDivElement(color, offeringPlayer, keywords.proposal);
 
+  offer.forEach((resource) => {
+    createChildImgElement(node, resource);
+  });
+
+  const textNodeEnd = document.createTextNode(keywords.wants);
+  node.appendChild(textNodeEnd);
+
+  want.forEach((resource) => {
+    createChildImgElement(node, resource);
+  });
+
+  parsePurposalMessage(node, dispatch);
+};
 export const playerTrade = (
   dispatch: React.Dispatch<Action>,
   offeringPlayer: string,
@@ -269,6 +299,8 @@ export const playerTrade = (
   took: ResourceType[],
   color: string
 ) => {
+  offerPurposal(dispatch, offeringPlayer, gave, took, color);
+
   const node = createDivElement(
     color,
     offeringPlayer,
@@ -293,6 +325,17 @@ export const playerTrade = (
 
   parsePlayersTrade(node, dispatch);
 };
+//  const tradeOfferAccepted = (  dispatch: React.Dispatch<Action>,
+//   offeringPlayer: string,
+//   agreedPlayer: string,
+//   offer: ResourceType[],
+//   want: ResourceType[],
+//   color: string) => {
+
+//     offerPurposal(dispatch,offeringPlayer, offer, want, color )
+//     playerTrade(dispatch, offeringPlayer, agreedPlayer, offer, want, color )
+
+// }
 
 export const monopoly = (
   dispatch: React.Dispatch<Action>,
