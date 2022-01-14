@@ -6,6 +6,7 @@ import {
   parseMonoplyCard,
   parsePlayersTrade,
   parsePurchase,
+  parsePurposalMessage,
   parseStoleFromYouMessage,
   parseStoleUnknownMessage,
   parseYearofPlenty,
@@ -217,6 +218,16 @@ export const givePlayersInitialResources = (
   });
 };
 
+export const countResourceInPlay = (
+  resourcesInPlay: ResourceType[],
+  resourceToCount: ResourceType
+) => {
+  return resourcesInPlay.reduce(
+    (acc, resource) => (resourceToCount === resource ? acc + 1 : acc),
+    0
+  );
+};
+
 export const playerMakesPurchase = (
   dipatch: React.Dispatch<Action>,
   user: string,
@@ -258,7 +269,28 @@ export const bankTrade = (
 
   parseBankTrade(node, dispatch);
 };
+export const offerPurposal = (
+  dispatch: React.Dispatch<Action>,
+  offeringPlayer: string,
+  offer: ResourceType[],
+  want: ResourceType[],
+  color: string
+) => {
+  const node = createDivElement(color, offeringPlayer, keywords.proposal);
 
+  offer.forEach((resource) => {
+    createChildImgElement(node, resource);
+  });
+
+  const textNodeEnd = document.createTextNode(keywords.wants);
+  node.appendChild(textNodeEnd);
+
+  want.forEach((resource) => {
+    createChildImgElement(node, resource);
+  });
+
+  parsePurposalMessage(node, dispatch);
+};
 export const playerTrade = (
   dispatch: React.Dispatch<Action>,
   offeringPlayer: string,
@@ -267,6 +299,8 @@ export const playerTrade = (
   took: ResourceType[],
   color: string
 ) => {
+  offerPurposal(dispatch, offeringPlayer, gave, took, color);
+
   const node = createDivElement(
     color,
     offeringPlayer,
@@ -291,6 +325,17 @@ export const playerTrade = (
 
   parsePlayersTrade(node, dispatch);
 };
+//  const tradeOfferAccepted = (  dispatch: React.Dispatch<Action>,
+//   offeringPlayer: string,
+//   agreedPlayer: string,
+//   offer: ResourceType[],
+//   want: ResourceType[],
+//   color: string) => {
+
+//     offerPurposal(dispatch,offeringPlayer, offer, want, color )
+//     playerTrade(dispatch, offeringPlayer, agreedPlayer, offer, want, color )
+
+// }
 
 export const monopoly = (
   dispatch: React.Dispatch<Action>,
