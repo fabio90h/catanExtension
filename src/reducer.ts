@@ -213,18 +213,8 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
           0
         ) - users[action.payload.user].resources[action.payload.stolenResource];
 
-      //Remove resource from each player
-      Object.keys(users).forEach((player) => {
-        if (player !== action.payload.user)
-          users[player].resources[action.payload.stolenResource] = 0;
-      });
-
-      //Add the stolen resources to the player
-      users[action.payload.user].resources[action.payload.stolenResource] +=
-        action.payload.stoleAmount;
-
       // RESOLVE THEFT //TODO: CAN BE REFACTORED
-      // Only if the max steals matche the amount it actually stole
+      // Only if the max steals matches the amount it actually stole
       if (action.payload.stoleAmount === maxPossibleResourcesToGrab) {
         // Remove any monopolize resource from the theft
         thefts.forEach(
@@ -251,7 +241,54 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
           }
           return true;
         });
+      } else {
+        // If stealer steals then plays monopoly
+        //TODO: REFACTOR: Counts the amount of times a specific resource
+        const possibleResourceTheft = calculateTheftForPlayerAndResource(
+          action.payload.user,
+          action.payload.stolenResource,
+          thefts
+        );
+
+        if (
+          possibleResourceTheft + action.payload.stoleAmount ===
+          maxPossibleResourcesToGrab
+        ) {
+          // Filter out any "theft.what" with length 1 since we can resolve them
+          thefts = thefts.filter((theft) => {
+            if (
+              theft.who.stealer === action.payload.user &&
+              !!theft.what[action.payload.stolenResource]
+            ) {
+              users[theft.who.stealer].resources[
+                action.payload.stolenResource
+              ] += 1;
+              console.log("Theft solved!", theft);
+              return false;
+            } else if (
+              theft.who.victim === action.payload.user &&
+              !!theft.what[action.payload.stolenResource]
+            ) {
+              users[theft.who.victim].resources[
+                action.payload.stolenResource
+              ] -= 1;
+              console.log("Theft solved!", theft);
+              return false;
+            }
+            return true;
+          });
+        }
       }
+
+      //Remove resource from each player
+      Object.keys(users).forEach((player) => {
+        if (player !== action.payload.user)
+          users[player].resources[action.payload.stolenResource] = 0;
+      });
+
+      //Add the stolen resources to the player
+      users[action.payload.user].resources[action.payload.stolenResource] +=
+        action.payload.stoleAmount;
 
       return {
         thefts,

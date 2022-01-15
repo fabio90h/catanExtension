@@ -178,8 +178,8 @@ export const checkForUserExistance = (user: string, usersData: Users) => {
 };
 
 /**
- * Calculate the total lost quantity of a resource for a given player.
- * i.e. if 1 card was potentially stolen, return 1.
+ * Calculate the total sum of lost and gain of resource for a given player.
+ * i.e. if 1 resource was potentially stolen but also potentially stole, return 0.
  */
 export function calculateTheftForPlayerAndResource(
   player: string,
