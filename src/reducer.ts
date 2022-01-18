@@ -445,8 +445,34 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
         what: possibleResourceStolen,
       };
 
+      // TODO: Refactor this function
+      const indexOfStealerBeingVictim = thefts.findIndex((_) => {
+        const test =
+          JSON.stringify(Object.keys(_.what)) ===
+          JSON.stringify(
+            Object.keys(users[_.who.victim].resources).filter(
+              (resource) => users[_.who.victim].resources[resource] > 0
+            )
+          );
+
+        if (test) {
+          theft.who.victim = _.who.victim;
+        }
+        return test;
+      });
+
+      const victimResourcesCount =
+        victimResources[ResourceType.BRICK] +
+        victimResources[ResourceType.WOOD] +
+        victimResources[ResourceType.WHEAT] +
+        victimResources[ResourceType.STONE] +
+        victimResources[ResourceType.SHEEP];
+
       //One or nothing thing can be stolen
-      if (possibleResouceStolenArray.length <= 1) {
+      if (victimResourcesCount === 0 && indexOfStealerBeingVictim >= 0) {
+        thefts[indexOfStealerBeingVictim] = theft;
+        return { users, thefts };
+      } else if (possibleResouceStolenArray.length <= 1) {
         console.log("less than or equal to one");
         possibleResouceStolenArray.forEach((resource) => {
           victimResources[resource] -= 1;

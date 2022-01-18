@@ -3230,7 +3230,7 @@ describe("Action Tests", () => {
       const players = Object.keys(result.current[0].users);
       [player, player2, stealerName] = shuffleArray(players);
     });
-    it("Resolves successfully (1 layer)", () => {
+    it.skip("Resolves successfully (1 layer)", () => {
       // Give resources to player
       act(() =>
         givePlayersInitialResources(
@@ -3286,6 +3286,66 @@ describe("Action Tests", () => {
         ...emptyResources,
         [ResourceType.BRICK]: 1,
         [ResourceType.SHEEP]: 1,
+      });
+    });
+    it("Resolves successfully (1 layer) and reduces theft possibilities (layer 2)", () => {
+      // Give resources to player
+      act(() =>
+        givePlayersInitialResources(
+          result.current[1],
+          {
+            [stealerName]: [],
+            [player2]: [ResourceType.WOOD, ResourceType.BRICK],
+            [player]: [ResourceType.WHEAT],
+          },
+          result.current[0].users
+        )
+      );
+      // Unknown steal stealerName steals player2
+      act(() =>
+        unknownSteal(
+          result.current[1],
+          player2,
+          stealerName,
+          result.current[0].users[stealerName].config.color
+        )
+      );
+      // Unknown steal player steals stealerName
+      act(() =>
+        unknownSteal(
+          result.current[1],
+          stealerName,
+          player,
+          result.current[0].users[player].config.color
+        )
+      );
+      expect(result.current[0].thefts).toHaveLength(1);
+      // Manually resolve theft
+      const index = 0;
+      act(() => {
+        manuallyResolveUnknownTheft(
+          result.current[1],
+          ResourceType.WOOD,
+          result.current[0].thefts[index].who.stealer,
+          result.current[0].thefts[index].who.victim,
+          index
+        );
+      });
+      // Check the theft record
+      expect(result.current[0].thefts).toHaveLength(0);
+      expect(result.current[0].thefts).toStrictEqual([]);
+      // Check players resources
+      expect(result.current[0].users[stealerName].resources).toStrictEqual({
+        ...emptyResources,
+      });
+      expect(result.current[0].users[player].resources).toStrictEqual({
+        ...emptyResources,
+        [ResourceType.WOOD]: 1,
+        [ResourceType.WHEAT]: 1,
+      });
+      expect(result.current[0].users[player2].resources).toStrictEqual({
+        ...emptyResources,
+        [ResourceType.BRICK]: 1,
       });
     });
   });

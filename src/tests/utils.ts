@@ -325,17 +325,6 @@ export const playerTrade = (
 
   parsePlayersTrade(node, dispatch);
 };
-//  const tradeOfferAccepted = (  dispatch: React.Dispatch<Action>,
-//   offeringPlayer: string,
-//   agreedPlayer: string,
-//   offer: ResourceType[],
-//   want: ResourceType[],
-//   color: string) => {
-
-//     offerPurposal(dispatch,offeringPlayer, offer, want, color )
-//     playerTrade(dispatch, offeringPlayer, agreedPlayer, offer, want, color )
-
-// }
 
 export const monopoly = (
   dispatch: React.Dispatch<Action>,
