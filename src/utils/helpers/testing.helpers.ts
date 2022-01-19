@@ -1,158 +1,24 @@
-import { Action } from "../reducer";
+import { Action } from "../../reducer";
 import {
-  parseBankTrade,
-  parseDiscardedMessage,
+  recognizeUsers,
   parseGot,
-  parseMonoplyCard,
-  parsePlayersTrade,
   parsePurchase,
+  parseBankTrade,
   parsePurposalMessage,
+  parsePlayersTrade,
+  parseMonoplyCard,
+  parseYearofPlenty,
+  parseDiscardedMessage,
   parseStoleFromYouMessage,
   parseStoleUnknownMessage,
-  parseYearofPlenty,
-  recognizeUsers,
-} from "../scripts/actionParser";
+} from "../../scripts/actionParser";
 import {
-  PurchaseType,
-  ResourceType,
-  UserConfig,
-  UserResources,
-  Users,
-} from "../types";
-import { getImg } from "../utils/index.";
-import keywords from "../utils/keywords";
-import testData from "./data";
-
-type UserProperties = {
-  resources: UserResources;
-  config: UserConfig;
-};
-
-/**
- * Returns a random number between min (inclusive) and max (exclusive)
- */
-export const getRandomArbitrary = (min: number, max: number) => {
-  return Math.floor(Math.random() * (max - min) + min);
-};
-
-export const shuffleArray = <T>(array: Array<T>) => {
-  let currentIndex = array.length,
-    randomIndex;
-
-  // While there remain elements to shuffle...
-  while (currentIndex != 0) {
-    // Pick a remaining element...
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex--;
-
-    // And swap it with the current element.
-    [array[currentIndex], array[randomIndex]] = [
-      array[randomIndex],
-      array[currentIndex],
-    ];
-  }
-
-  return array;
-};
-
-export const getRandomResources = (amount: number = 9) => {
-  const gainedResources: ResourceType[] = [];
-  const resourceAmount = getRandomArbitrary(1, amount);
-  for (let i = 0; i < resourceAmount; i++) {
-    const randomIndex = getRandomArbitrary(0, testData.resources.length);
-    gainedResources.push(testData.resources[randomIndex]);
-  }
-
-  return gainedResources;
-};
-
-const startingResourcesAndConfig: UserProperties[] = [
-  {
-    resources: {
-      [ResourceType.WOOD]: 1,
-      [ResourceType.WHEAT]: 0,
-      [ResourceType.BRICK]: 0,
-      [ResourceType.SHEEP]: 0,
-      [ResourceType.STONE]: 2,
-    },
-    config: { color: "rgb(224, 151, 66)" },
-  },
-  {
-    resources: {
-      [ResourceType.WOOD]: 1,
-      [ResourceType.WHEAT]: 0,
-      [ResourceType.BRICK]: 1,
-      [ResourceType.SHEEP]: 1,
-      [ResourceType.STONE]: 0,
-    },
-    config: { color: "rgb(102, 102, 102)" },
-  },
-  {
-    resources: {
-      [ResourceType.WOOD]: 1,
-      [ResourceType.WHEAT]: 0,
-      [ResourceType.BRICK]: 2,
-      [ResourceType.SHEEP]: 0,
-      [ResourceType.STONE]: 0,
-    },
-    config: { color: "rgb(226, 113, 116)" },
-  },
-  {
-    resources: {
-      [ResourceType.WOOD]: 2,
-      [ResourceType.WHEAT]: 0,
-      [ResourceType.BRICK]: 0,
-      [ResourceType.SHEEP]: 0,
-      [ResourceType.STONE]: 0,
-    },
-    config: { color: "rgb(34, 54, 151)" },
-  },
-];
-
-export const emptyResources = {
-  [ResourceType.WOOD]: 0,
-  [ResourceType.WHEAT]: 0,
-  [ResourceType.BRICK]: 0,
-  [ResourceType.SHEEP]: 0,
-  [ResourceType.STONE]: 0,
-};
-
-export const createPlayersAndProperties = (
-  allResourceStartEmpty: boolean = false
-) => {
-  const shuffledStartingResourcesAndConfig = shuffleArray<UserProperties>(
-    startingResourcesAndConfig
-  );
-  return testData.users.reduce<Users>((acc, user, index) => {
-    acc[user] = shuffledStartingResourcesAndConfig[index];
-    if (allResourceStartEmpty) {
-      acc[user].resources = emptyResources;
-    }
-    return acc;
-  }, {});
-};
-
-export const createDivElement = (
-  color: string,
-  user1: string,
-  keywords: string,
-  user2?: string
-) => {
-  const node = document.createElement("div");
-  node.textContent = `${user1} ${keywords} ${user2 ? user2 : ""}`;
-  node.style.color = color;
-  return node;
-};
-
-export const createChildImgElement = (
-  node: HTMLElement,
-  imageType: ResourceType | PurchaseType
-) => {
-  const img = document.createElement("img");
-  img.setAttribute("src", getImg(imageType));
-  node.appendChild(img);
-  return node;
-};
+  createPlayersAndProperties,
+  createDivElement,
+  createChildImgElement,
+} from "../../tests/utils";
+import { ResourceType, Users, PurchaseType } from "../../types";
+import keywords from "../keywords";
 
 export const initiateTestingPlayers = (
   dipatch: React.Dispatch<Action>,
@@ -217,16 +83,13 @@ export const givePlayersInitialResources = (
   });
 };
 
-export const maxMonopolyGain = (
-  resourcesInPlay: ResourceType[],
-  resourceToCount: ResourceType
-) => {
-  return resourcesInPlay.reduce(
-    (acc, resource) => (resourceToCount === resource ? acc + 1 : acc),
-    0
-  );
-};
-
+/**
+ * Simulate a player making a purchase with resources
+ * @param dipatch
+ * @param user
+ * @param purchaseType
+ * @param color
+ */
 export const playerMakesPurchase = (
   dipatch: React.Dispatch<Action>,
   user: string,
@@ -246,6 +109,14 @@ export const playerMakesPurchase = (
   parsePurchase(node, dipatch);
 };
 
+/**
+ * Similate a player making a trade with the bank
+ * @param dispatch
+ * @param user
+ * @param gave
+ * @param took
+ * @param color
+ */
 export const bankTrade = (
   dispatch: React.Dispatch<Action>,
   user: string,
@@ -268,6 +139,15 @@ export const bankTrade = (
 
   parseBankTrade(node, dispatch);
 };
+
+/**
+ * Simulate a player making a trade offer
+ * @param dispatch
+ * @param offeringPlayer
+ * @param offer
+ * @param want
+ * @param color
+ */
 export const offerPurposal = (
   dispatch: React.Dispatch<Action>,
   offeringPlayer: string,
@@ -290,6 +170,16 @@ export const offerPurposal = (
 
   parsePurposalMessage(node, dispatch);
 };
+
+/**
+ * Simulates a player accepting a trade offer
+ * @param dispatch
+ * @param offeringPlayer
+ * @param agreedPlayer
+ * @param gave
+ * @param took
+ * @param color
+ */
 export const playerTrade = (
   dispatch: React.Dispatch<Action>,
   offeringPlayer: string,
@@ -325,6 +215,14 @@ export const playerTrade = (
   parsePlayersTrade(node, dispatch);
 };
 
+/**
+ * Simulates a player playing the monopoly card
+ * @param dispatch
+ * @param player
+ * @param color
+ * @param monopolizedResource
+ * @param amountStolen
+ */
 export const monopoly = (
   dispatch: React.Dispatch<Action>,
   player: string,

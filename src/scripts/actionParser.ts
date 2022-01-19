@@ -165,7 +165,6 @@ export const parseMonoplyCard = (
   }
 };
 
-//NEED TO TEST
 export const parseYearofPlenty = (
   node: HTMLElement,
   dispatch: React.Dispatch<Action>

@@ -503,7 +503,6 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
         };
       }
     }
-
     /**
      * ## Should consider:
      * - Stealer or victim offers a deal that couldnt have been possible.
