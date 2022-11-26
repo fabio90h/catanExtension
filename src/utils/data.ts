@@ -1,5 +1,5 @@
 import { ResourceType, PurchaseType } from "../types";
-import keywords from "../utils/keywords";
+import keywords from "./keywords";
 
 export default {
   resources: [

@@ -10,7 +10,7 @@ import {
   unknownSteal,
 } from "../../../utils/helpers/testing.helpers";
 import { GameData, PurchaseType, ResourceType } from "../../../types";
-import testData from "../../../tests/data";
+import testData from "../../../utils/data";
 import { shuffleArray, emptyResources } from "../../../tests/utils";
 
 describe("Spending resources works as expected", () => {
@@ -36,6 +36,7 @@ describe("Spending resources works as expected", () => {
     const players = Object.keys(result.current[0].users);
     [playerName, stealerName, stealer2] = shuffleArray(players);
   });
+
   describe("Build road", () => {
     it("Builds it correctly", () => {
       // Add the resources to make sure the user has the necessary resources to buy

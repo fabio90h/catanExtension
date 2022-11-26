@@ -1,17 +1,16 @@
 import { Action } from "../../reducer";
-import {
-  recognizeUsers,
-  parseGot,
-  parsePurchase,
-  parseBankTrade,
-  parsePurposalMessage,
-  parsePlayersTrade,
-  parseMonoplyCard,
-  parseYearofPlenty,
-  parseDiscardedMessage,
-  parseStoleFromYouMessage,
-  parseStoleUnknownMessage,
-} from "../../scripts/actionParser";
+import { parseBankTrade } from "../../scripts/actions/parseBankTrade/parseBankTrade.action";
+import { parseDiscardMessage } from "../../scripts/actions/parseDiscardMessage/parseDiscardMessage.action";
+import { parseGot } from "../../scripts/actions/parseGot/parseGot.actions";
+import { parseMonoplyCard } from "../../scripts/actions/parseMonoplyCard/parseMonoplyCard.action";
+import { parsePlayersTrade } from "../../scripts/actions/parsePlayerTrade/parsePlayerTrade.actions";
+import { parsePurchase } from "../../scripts/actions/parsePurchase/parsePurchase.actions";
+import { parsePurposalMessage } from "../../scripts/actions/parsePurposalMessage/parsePurposalMessage.action";
+import { parseRecognizeUsers } from "../../scripts/actions/parseRecognizeUsers/parseRecognizeUsers.actions";
+
+import { parseStoleFromYouMessage } from "../../scripts/actions/parseStoleFromYouMessage/parseStoleFromYouMessage.action";
+import { parseStoleUnknownMessage } from "../../scripts/actions/parseStoleUnknownMessage/parseStoleUnknownMessage.action";
+import { parseYearOfPlenty } from "../../scripts/actions/parseYearOfPlenty/parseYearOfPlenty.actions";
 import {
   createPlayersAndProperties,
   createDivElement,
@@ -46,7 +45,7 @@ export const initiateTestingPlayers = (
       }
     );
 
-    recognizeUsers(node, dipatch);
+    parseRecognizeUsers(node, dipatch);
   });
 };
 
@@ -254,7 +253,7 @@ export const yearOfPlenty = (
     createChildImgElement(node, resource);
   });
 
-  parseYearofPlenty(node, dispatch);
+  parseYearOfPlenty(node, dispatch);
 };
 
 export const discardCards = (
@@ -269,7 +268,7 @@ export const discardCards = (
     createChildImgElement(node, resource);
   });
 
-  parseDiscardedMessage(node, dispatch);
+  parseDiscardMessage(node, dispatch);
 };
 
 export const stoleFromOrByYou = (

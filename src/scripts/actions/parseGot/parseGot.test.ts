@@ -7,7 +7,7 @@ import {
   giveResourcesToPlayer,
 } from "../../../utils/helpers/testing.helpers";
 import { ResourceType } from "../../../types";
-import testData from "../../../tests/data";
+import testData from "../../../utils/data";
 import { shuffleArray, emptyResources } from "../../../tests/utils";
 
 it("Adds resources when 'got' message appears", () => {
