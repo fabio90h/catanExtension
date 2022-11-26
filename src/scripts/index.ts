@@ -6,10 +6,10 @@ import { parseBankTrade } from "./actions/parseBankTrade/parseBankTrade.action";
 import { parseDiscardMessage } from "./actions/parseDiscardMessage/parseDiscardMessage.action";
 
 import { parseGot } from "./actions/parseGot/parseGot.actions";
-import { parseMonoplyCard } from "./actions/parseMonoplyCard/parseMonoplyCard.action";
+import { parseMonopolyCard } from "./actions/parseMonopolyCard/parseMonopolyCard.action";
 import { parsePlayersTrade } from "./actions/parsePlayerTrade/parsePlayerTrade.actions";
 import { parsePurchase } from "./actions/parsePurchase/parsePurchase.actions";
-import { parsePurposalMessage } from "./actions/parsePurposalMessage/parsePurposalMessage.action";
+import { parseProposalMessage } from "./actions/parseProposalMessage/parseProposalMessage.action";
 import { parseRecognizeUsers } from "./actions/parseRecognizeUsers/parseRecognizeUsers.actions";
 import { parseStoleFromYouMessage } from "./actions/parseStoleFromYouMessage/parseStoleFromYouMessage.action";
 import { parseStoleUnknownMessage } from "./actions/parseStoleUnknownMessage/parseStoleUnknownMessage.action";
@@ -54,7 +54,7 @@ export const watchLog = (
             else if (parseBankTrade(node as HTMLElement, dispatch)) return;
             else if (parsePlayersTrade(node as HTMLElement, dispatch)) return;
             else if (
-              parseMonoplyCard(
+              parseMonopolyCard(
                 node as HTMLElement,
                 mutation.previousSibling as HTMLElement,
                 dispatch
@@ -67,7 +67,7 @@ export const watchLog = (
               return;
             else if (parseStoleUnknownMessage(node as HTMLElement, dispatch))
               return;
-            else if (parsePurposalMessage(node as HTMLElement, dispatch))
+            else if (parseProposalMessage(node as HTMLElement, dispatch))
               return;
           }
         });

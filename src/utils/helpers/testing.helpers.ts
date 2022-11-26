@@ -2,10 +2,10 @@ import { Action } from "../../reducer";
 import { parseBankTrade } from "../../scripts/actions/parseBankTrade/parseBankTrade.action";
 import { parseDiscardMessage } from "../../scripts/actions/parseDiscardMessage/parseDiscardMessage.action";
 import { parseGot } from "../../scripts/actions/parseGot/parseGot.actions";
-import { parseMonoplyCard } from "../../scripts/actions/parseMonoplyCard/parseMonoplyCard.action";
+import { parseMonopolyCard } from "../../scripts/actions/parseMonopolyCard/parseMonopolyCard.action";
 import { parsePlayersTrade } from "../../scripts/actions/parsePlayerTrade/parsePlayerTrade.actions";
 import { parsePurchase } from "../../scripts/actions/parsePurchase/parsePurchase.actions";
-import { parsePurposalMessage } from "../../scripts/actions/parsePurposalMessage/parsePurposalMessage.action";
+import { parseProposalMessage } from "../../scripts/actions/parseProposalMessage/parseProposalMessage.action";
 import { parseRecognizeUsers } from "../../scripts/actions/parseRecognizeUsers/parseRecognizeUsers.actions";
 
 import { parseStoleFromYouMessage } from "../../scripts/actions/parseStoleFromYouMessage/parseStoleFromYouMessage.action";
@@ -167,7 +167,7 @@ export const offerPurposal = (
     createChildImgElement(node, resource);
   });
 
-  parsePurposalMessage(node, dispatch);
+  parseProposalMessage(node, dispatch);
 };
 
 /**
@@ -238,7 +238,7 @@ export const monopoly = (
   const textNodeAgree = document.createTextNode(` ${amountStolen}`);
   node.appendChild(textNodeAgree);
 
-  parseMonoplyCard(node, prevNode, dispatch);
+  parseMonopolyCard(node, prevNode, dispatch);
 };
 
 export const yearOfPlenty = (

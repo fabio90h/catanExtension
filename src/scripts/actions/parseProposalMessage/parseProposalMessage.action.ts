@@ -2,7 +2,7 @@ import { Action, ActionType } from "../../../reducer";
 import { parseExchangeImages } from "../../../utils/index.";
 import keywords from "../../../utils/keywords";
 
-export const parsePurposalMessage = (
+export const parseProposalMessage = (
   node: HTMLElement,
   dispatch: React.Dispatch<Action>
 ) => {
