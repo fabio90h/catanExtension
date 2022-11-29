@@ -24,7 +24,8 @@
     "start": "react-app-rewired start",
     "build:extension": "REACT_APP_BUILD_TARGET=extension react-app-rewired build",
     "build:web-app": "REACT_APP_BUILD_TARGET=web-app react-app-rewired build",
-    "test": "react-app-rewired test --verbose false"
+    "test": "react-app-rewired test --verbose false",
+    "prepare": "husky install"
   },
   "eslintConfig": {
     "extends": [
@@ -45,6 +46,7 @@
     ]
   },
   "devDependencies": {
-    "@testing-library/react-hooks": "^7.0.2"
+    "@testing-library/react-hooks": "^7.0.2",
+    "husky": "^8.0.2"
   }
 }
