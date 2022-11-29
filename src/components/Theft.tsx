@@ -2,7 +2,7 @@ import React from "react";
 import { Action, ActionType } from "../reducer";
 import styled from "styled-components";
 import { ResourceType, Theft as TheftType, UnknownType, Users } from "../types";
-import { getImg } from "../utils/index.";
+import { getImg, manuallyResolveUnknownTheft } from "../utils/index.";
 import { TableBodyRow, TableImage } from "./Table";
 
 type Props = {
@@ -45,20 +45,14 @@ const Theft: React.FC<Props> = (props) => {
   const { theft, users, dispatch, id } = props;
 
   const handleResourceClick = React.useCallback(
-    (resource: ResourceType) => {
-      dispatch({
-        type: ActionType.ADD_RESOURCES,
-        payload: { user: theft.who.stealer, addResources: [resource] },
-      });
-      dispatch({
-        type: ActionType.SUBTRACT_RESOURCES,
-        payload: { user: theft.who.victim, subtractResources: [resource] },
-      });
-      dispatch({
-        type: ActionType.RESOLVE_UNKNOWN_STEAL,
-        payload: { id },
-      });
-    },
+    (resource: ResourceType) =>
+      manuallyResolveUnknownTheft(
+        dispatch,
+        resource,
+        theft.who.stealer,
+        theft.who.victim,
+        id
+      ),
     [dispatch, id, theft.who.stealer, theft.who.victim]
   );
 

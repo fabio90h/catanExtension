@@ -178,8 +178,8 @@ export const checkForUserExistance = (user: string, usersData: Users) => {
 };
 
 /**
- * Calculate the total lost quantity of a resource for a given player.
- * i.e. if 1 card was potentially stolen, return 1.
+ * Calculate the total sum of lost and gain of resource for a given player.
+ * i.e. if 1 resource was potentially stolen but also potentially stole, return 0.
  */
 export function calculateTheftForPlayerAndResource(
   player: string,
@@ -196,3 +196,24 @@ export function calculateTheftForPlayerAndResource(
     return 0;
   }, 0);
 }
+
+// export const manuallyResolveUnknownTheft = (
+//   dispatch: React.Dispatch<Action>,
+//   resource: ResourceType,
+//   stealer: string,
+//   victim: string,
+//   id: number
+// ) => {
+//   dispatch({
+//     type: ActionType.ADD_RESOURCES,
+//     payload: { user: stealer, addResources: [resource] },
+//   });
+//   dispatch({
+//     type: ActionType.SUBTRACT_RESOURCES,
+//     payload: { user: victim, subtractResources: [resource] },
+//   });
+//   dispatch({
+//     type: ActionType.RESOLVE_UNKNOWN_STEAL,
+//     payload: { id },
+//   });
+// };

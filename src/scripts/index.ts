@@ -1,18 +1,19 @@
+/* eslint-disable no-loop-func */
 import { Action } from "../reducer";
 import keywords from "../utils/keywords";
-import {
-  parsePurchase,
-  parseGot,
-  recognizeUsers,
-  parseBankTrade,
-  parsePlayersTrade,
-  parseMonoplyCard,
-  parseYearofPlenty,
-  parseDiscardedMessage,
-  parseStoleFromYouMessage,
-  parseStoleUnknownMessage,
-  parsePurposalMessage,
-} from "./actionParser";
+
+import { parseBankTrade } from "./actions/parseBankTrade/parseBankTrade.action";
+import { parseDiscardMessage } from "./actions/parseDiscardMessage/parseDiscardMessage.action";
+
+import { parseGot } from "./actions/parseGot/parseGot.actions";
+import { parseMonopolyCard } from "./actions/parseMonopolyCard/parseMonopolyCard.action";
+import { parsePlayersTrade } from "./actions/parsePlayerTrade/parsePlayerTrade.actions";
+import { parsePurchase } from "./actions/parsePurchase/parsePurchase.actions";
+import { parseProposalMessage } from "./actions/parseProposalMessage/parseProposalMessage.action";
+import { parseRecognizeUsers } from "./actions/parseRecognizeUsers/parseRecognizeUsers.actions";
+import { parseStoleFromYouMessage } from "./actions/parseStoleFromYouMessage/parseStoleFromYouMessage.action";
+import { parseStoleUnknownMessage } from "./actions/parseStoleUnknownMessage/parseStoleUnknownMessage.action";
+import { parseYearOfPlenty } from "./actions/parseYearOfPlenty/parseYearOfPlenty.actions";
 
 // First, delete the ad
 function deleteAd() {
@@ -38,7 +39,7 @@ export const watchLog = (
         mutation.addedNodes.forEach((node) => {
           // Get initial resources and players
           if (!initialPlacementDone) {
-            recognizeUsers(node as HTMLElement, dispatch);
+            parseRecognizeUsers(node as HTMLElement, dispatch);
             initialPlacementDone =
               node.textContent?.includes(
                 keywords.initialPlacementDoneMessage
@@ -46,48 +47,28 @@ export const watchLog = (
           }
           // Check for incoming logs after placement
           else {
+            // Player got resources
             if (parseGot(node as HTMLElement, dispatch)) return;
+            // Player bought something
             else if (parsePurchase(node as HTMLElement, dispatch)) return;
             else if (parseBankTrade(node as HTMLElement, dispatch)) return;
             else if (parsePlayersTrade(node as HTMLElement, dispatch)) return;
             else if (
-              parseMonoplyCard(
+              parseMonopolyCard(
                 node as HTMLElement,
                 mutation.previousSibling as HTMLElement,
                 dispatch
               )
             )
               return;
-            else if (parseYearofPlenty(node as HTMLElement, dispatch)) return;
-            else if (parseDiscardedMessage(node as HTMLElement, dispatch))
-              return;
+            else if (parseYearOfPlenty(node as HTMLElement, dispatch)) return;
+            else if (parseDiscardMessage(node as HTMLElement, dispatch)) return;
             else if (parseStoleFromYouMessage(node as HTMLElement, dispatch))
               return;
             else if (parseStoleUnknownMessage(node as HTMLElement, dispatch))
               return;
-            else if (parsePurposalMessage(node as HTMLElement, dispatch))
+            else if (parseProposalMessage(node as HTMLElement, dispatch))
               return;
-
-            /**
-             * parseGotMessage,
-             * parseBuiltMessage,
-             * parseBoughtMessage,
-             * parseTradeBankMessage,
-             * parseTradedMessage,
-             * arseDiscardedMessage,
-             * parseStoleFromYouMessage
-             * 
-             * parseStoleUnknownMessage,
-             * reviewTheft
-             * parseDealProposal
-             * 
-             * parseStoleAllOfMessage,
-             * parseYearofPlenty,
-             * 
-
-             *                 
-                
-             */
           }
         });
       }

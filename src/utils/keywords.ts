@@ -1,5 +1,6 @@
+/* eslint-disable import/no-anonymous-default-export */
 export default {
-  userName: "Fabio#2871", //userName
+  userName: "Fabio#1126", //userName
 
   initialPlacementDoneMessage: "rolled:",
 
