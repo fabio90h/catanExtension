@@ -2,6 +2,6 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 echo "Running unit tests"
-yarn test -- --watchAll=false
+yarn test --watchAll=false
 echo "Done with unit tests"
 
