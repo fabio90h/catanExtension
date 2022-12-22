@@ -20,7 +20,7 @@ import { ResourceType, Users, PurchaseType } from "../../types";
 import keywords from "../keywords";
 
 export const initiateTestingPlayers = (
-  dipatch: React.Dispatch<Action>,
+  dispatch: React.Dispatch<Action>,
   allResourceStartEmpty: boolean = false
 ) => {
   const users = createPlayersAndProperties(allResourceStartEmpty);
@@ -45,7 +45,7 @@ export const initiateTestingPlayers = (
       }
     );
 
-    parseRecognizeUsers(node, dipatch);
+    parseRecognizeUsers(node, dispatch);
   });
 };
 
@@ -147,7 +147,7 @@ export const bankTrade = (
  * @param want
  * @param color
  */
-export const offerPurposal = (
+export const offerProposal = (
   dispatch: React.Dispatch<Action>,
   offeringPlayer: string,
   offer: ResourceType[],
@@ -187,7 +187,7 @@ export const playerTrade = (
   took: ResourceType[],
   color: string
 ) => {
-  offerPurposal(dispatch, offeringPlayer, gave, took, color);
+  offerProposal(dispatch, offeringPlayer, gave, took, color);
 
   const node = createDivElement(
     color,

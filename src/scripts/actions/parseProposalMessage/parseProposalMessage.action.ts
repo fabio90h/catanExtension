@@ -19,5 +19,11 @@ export const parseProposalMessage = (
       type: ActionType.RESOLVE_UNKNOWN_STEAL_WITH_OFFERS,
       payload: { player, offeredResources, wantedResources },
     });
+
+    //Review steals to see if any can be resolved with the offer resolution.
+    dispatch({
+      type: ActionType.REVIEW_STEALS,
+      payload: { player },
+    });
   }
 };

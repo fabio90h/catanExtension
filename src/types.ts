@@ -35,3 +35,8 @@ export type Users = Record<
 export type ImageType = PurchaseType | ResourceType | UnknownType;
 
 export type GameData = { users: Users; thefts: Theft[] };
+
+export type Victim = {
+  resourceAmount: number;
+  reoccurrence: number;
+};

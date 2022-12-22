@@ -174,7 +174,7 @@ describe("Unknown steals", () => {
           victim,
         },
         what: {
-          [ResourceType.WOOD]: 1,
+          [ResourceType.WOOD]: 2,
           [ResourceType.BRICK]: 1,
           [ResourceType.STONE]: 1,
           [ResourceType.WHEAT]: 1,

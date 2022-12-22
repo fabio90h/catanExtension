@@ -8,6 +8,7 @@ import {
   playerMakesPurchase,
   givePlayersInitialResources,
   unknownSteal,
+  offerProposal,
 } from "../../../utils/helpers/testing.helpers";
 import { GameData, PurchaseType, ResourceType } from "../../../types";
 import testData from "../../../utils/data";
@@ -581,7 +582,7 @@ describe("Spending resources works as expected", () => {
             },
             what: {
               [ResourceType.STONE]: 1,
-              [ResourceType.SHEEP]: 1,
+              [ResourceType.SHEEP]: 2,
             },
           },
         ]);
@@ -711,8 +712,8 @@ describe("Spending resources works as expected", () => {
               victim: playerName,
             },
             what: {
-              [ResourceType.WHEAT]: 1,
-              [ResourceType.BRICK]: 1,
+              [ResourceType.WHEAT]: 2,
+              [ResourceType.BRICK]: 2,
               [ResourceType.STONE]: 1,
             },
           },
@@ -948,7 +949,7 @@ describe("Spending resources works as expected", () => {
             },
             what: {
               [ResourceType.WOOD]: 1,
-              [ResourceType.BRICK]: 1,
+              [ResourceType.BRICK]: 2,
             },
           },
         ]);

@@ -327,7 +327,7 @@ describe("trading with bank", () => {
           },
           what: {
             [ResourceType.WOOD]: 1,
-            [ResourceType.BRICK]: 1,
+            [ResourceType.BRICK]: 2,
           },
         },
       ]);
@@ -394,7 +394,7 @@ describe("trading with bank", () => {
           },
           what: {
             [ResourceType.SHEEP]: 1,
-            [ResourceType.WOOD]: 1,
+            [ResourceType.WOOD]: 4,
           },
         },
       ]);

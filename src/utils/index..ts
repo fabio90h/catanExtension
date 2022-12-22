@@ -6,6 +6,7 @@ import {
   Theft,
   UserResources,
   Users,
+  Victim,
 } from "../types";
 import keywords from "./keywords";
 
@@ -186,15 +187,67 @@ export function calculateTheftForPlayerAndResource(
   resourceType: ResourceType,
   thefts: Theft[]
 ) {
-  return thefts.reduce((acc, theft) => {
+  const total = thefts.reduce((acc, theft) => {
     if (theft.who.stealer === player) {
       return acc + (theft.what[resourceType] ? 1 : 0);
     }
     if (theft.who.victim === player) {
       return acc - (theft.what[resourceType] ? 1 : 0);
     }
-    return 0;
+    return acc;
   }, 0);
+  return total;
+}
+
+//TODO: Convert key based on Players and resource. See createVictimHash
+
+/**
+ * TODO: needs to change
+ * key has to be [victim_stealer-resource1_resource2]
+ * @param thefts
+ * @returns
+ */
+export function createVictimHash(thefts: Theft[]) {
+  return thefts.reduce<Record<string, Victim>>((acc, theft) => {
+    const players = `${theft.who.victim}_${theft.who.stealer}`;
+    const possibleResourceStolen = Object.keys(theft.what).join("_");
+    const resourceAmount = Object.keys(theft.what).length;
+
+    const key = `${players}:${possibleResourceStolen}`;
+
+    if (!!acc[key]) {
+      acc[key].reoccurrence = acc[key].reoccurrence + 1;
+      return acc;
+    }
+    return {
+      ...acc,
+      [key]: {
+        reoccurrence: 1,
+        resourceAmount,
+      },
+    };
+  }, {});
+}
+
+export function reduceOtherThefts(
+  thefts: Theft[],
+  victim: string,
+  stolenResource: ResourceType
+) {
+  for (let i = thefts.length - 1; i >= 0; i--) {
+    if (thefts[i].who.victim === victim && !!thefts[i].what[stolenResource]) {
+      // If the victim only has one resources at hand when he was stolen than remove
+      // this resource stolen possibility
+      if (thefts[i].what[stolenResource] === 1) {
+        delete thefts[i].what[stolenResource];
+      }
+      // Reduced the steal possibilities
+      else {
+        thefts[i].what[stolenResource]!--;
+      }
+    }
+  }
+  return thefts;
 }
 
 // export const manuallyResolveUnknownTheft = (
