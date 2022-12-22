@@ -35,7 +35,7 @@ describe("trading with player", () => {
     const players = Object.keys(result.current[0].users);
     [offeringPlayer, agreeingPlayer, player3] = shuffleArray(players);
   });
-  it("trades successfully", () => {
+  it.only("trades successfully", () => {
     // Add the resources to make sure the user has the necessary resources to buy
     act(() =>
       givePlayersInitialResources(
