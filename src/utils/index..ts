@@ -174,7 +174,7 @@ export const exchangeResources = (
  * @param user
  * @param usersData
  */
-export const checkForUserExistance = (user: string, usersData: Users) => {
+export const checkForUserExistence = (user: string, usersData: Users) => {
   if (!usersData[user]) throw Error(`Unable to find ${user} user.`);
 };
 

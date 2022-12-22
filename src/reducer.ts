@@ -10,7 +10,7 @@ import {
 } from "./types";
 import {
   calculateTheftForPlayerAndResource,
-  checkForUserExistance,
+  checkForUserExistence,
   createVictimHash,
   exchangeResourcesPure,
   reduceOtherThefts,
@@ -112,7 +112,7 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
       };
     }
     case ActionType.ADD_RESOURCES: {
-      checkForUserExistance(action.payload.user, state.users);
+      checkForUserExistence(action.payload.user, state.users);
       const users: Users = { ...state.users };
       const tempResources: UserResources = {
         ...users[action.payload.user].resources,
@@ -135,7 +135,7 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
       };
     }
     case ActionType.SUBTRACT_RESOURCES: {
-      checkForUserExistance(action.payload.user, state.users);
+      checkForUserExistence(action.payload.user, state.users);
       const users: Users = { ...state.users };
 
       const tempResources: UserResources = {
@@ -159,7 +159,7 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
       };
     }
     case ActionType.PURCHASE: {
-      checkForUserExistance(action.payload.user, state.users);
+      checkForUserExistence(action.payload.user, state.users);
       const users: Users = { ...state.users };
 
       const tempResources: UserResources = {
@@ -205,7 +205,7 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
       };
     }
     case ActionType.STEAL_ALL: {
-      checkForUserExistance(action.payload.user, state.users);
+      checkForUserExistence(action.payload.user, state.users);
       let users: Users = { ...state.users };
       let thefts: Theft[] = [...state.thefts];
 
@@ -492,8 +492,8 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
       return { users, thefts };
     }
     case ActionType.UNKNOWN_STEAL: {
-      checkForUserExistance(action.payload.victim, state.users);
-      checkForUserExistance(action.payload.stealer, state.users);
+      checkForUserExistence(action.payload.victim, state.users);
+      checkForUserExistence(action.payload.stealer, state.users);
 
       const users: Users = { ...state.users };
       const thefts = [...state.thefts];
