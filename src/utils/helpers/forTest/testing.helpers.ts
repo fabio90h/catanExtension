@@ -1,23 +1,23 @@
-import { Action } from "../../reducer";
-import { parseBankTrade } from "../../scripts/actions/parseBankTrade/parseBankTrade.action";
-import { parseDiscardMessage } from "../../scripts/actions/parseDiscardMessage/parseDiscardMessage.action";
-import { parseGot } from "../../scripts/actions/parseGot/parseGot.actions";
-import { parseMonopolyCard } from "../../scripts/actions/parseMonopolyCard/parseMonopolyCard.action";
-import { parsePlayersTrade } from "../../scripts/actions/parsePlayerTrade/parsePlayerTrade.actions";
-import { parsePurchase } from "../../scripts/actions/parsePurchase/parsePurchase.actions";
-import { parseProposalMessage } from "../../scripts/actions/parseProposalMessage/parseProposalMessage.action";
-import { parseRecognizeUsers } from "../../scripts/actions/parseRecognizeUsers/parseRecognizeUsers.actions";
+import { Action } from "../../../reducer";
+import { parseBankTrade } from "../../../scripts/actions/parseBankTrade/parseBankTrade.action";
+import { parseDiscardMessage } from "../../../scripts/actions/parseDiscardMessage/parseDiscardMessage.action";
+import { parseGot } from "../../../scripts/actions/parseGot/parseGot.actions";
+import { parseMonopolyCard } from "../../../scripts/actions/parseMonopolyCard/parseMonopolyCard.action";
+import { parsePlayersTrade } from "../../../scripts/actions/parsePlayerTrade/parsePlayerTrade.actions";
+import { parsePurchase } from "../../../scripts/actions/parsePurchase/parsePurchase.actions";
+import { parseProposalMessage } from "../../../scripts/actions/parseProposalMessage/parseProposalMessage.action";
+import { parseRecognizeUsers } from "../../../scripts/actions/parseRecognizeUsers/parseRecognizeUsers.actions";
 
-import { parseStoleFromYouMessage } from "../../scripts/actions/parseStoleFromYouMessage/parseStoleFromYouMessage.action";
-import { parseStoleUnknownMessage } from "../../scripts/actions/parseStoleUnknownMessage/parseStoleUnknownMessage.action";
-import { parseYearOfPlenty } from "../../scripts/actions/parseYearOfPlenty/parseYearOfPlenty.actions";
+import { parseStoleFromYouMessage } from "../../../scripts/actions/parseStoleFromYouMessage/parseStoleFromYouMessage.action";
+import { parseStoleUnknownMessage } from "../../../scripts/actions/parseStoleUnknownMessage/parseStoleUnknownMessage.action";
+import { parseYearOfPlenty } from "../../../scripts/actions/parseYearOfPlenty/parseYearOfPlenty.actions";
 import {
   createPlayersAndProperties,
   createDivElement,
   createChildImgElement,
-} from "../../tests/utils";
-import { ResourceType, Users, PurchaseType } from "../../types";
-import keywords from "../keywords";
+} from "../../../tests/utils";
+import { ResourceType, Users, PurchaseType } from "../../../types";
+import keywords from "../../keywords";
 
 export const initiateTestingPlayers = (
   dispatch: React.Dispatch<Action>,
@@ -109,7 +109,7 @@ export const playerMakesPurchase = (
 };
 
 /**
- * Similate a player making a trade with the bank
+ * Simulate a player making a trade with the bank
  * @param dispatch
  * @param user
  * @param gave

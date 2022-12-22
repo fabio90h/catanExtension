@@ -10,7 +10,7 @@ import {
   bankTrade,
   givePlayersInitialResources,
   unknownSteal,
-} from "../../../utils/helpers/testing.helpers";
+} from "../../../utils/helpers/forTest/testing.helpers";
 
 describe("trading with bank", () => {
   let result: RenderResult<[GameData, React.Dispatch<Action>]>;

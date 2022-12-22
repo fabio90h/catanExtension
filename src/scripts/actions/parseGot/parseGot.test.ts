@@ -5,7 +5,7 @@ import { reducer } from "../../../reducer";
 import {
   initiateTestingPlayers,
   giveResourcesToPlayer,
-} from "../../../utils/helpers/testing.helpers";
+} from "../../../utils/helpers/forTest/testing.helpers";
 import { ResourceType } from "../../../types";
 import testData from "../../../utils/data";
 import { shuffleArray, emptyResources } from "../../../tests/utils";

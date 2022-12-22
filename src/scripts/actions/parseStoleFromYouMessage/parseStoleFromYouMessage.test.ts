@@ -10,7 +10,7 @@ import {
   stoleFromOrByYou,
   givePlayersInitialResources,
   unknownSteal,
-} from "../../../utils/helpers/testing.helpers";
+} from "../../../utils/helpers/forTest/testing.helpers";
 import keywords from "../../../utils/keywords";
 
 describe("Stole from or by you", () => {

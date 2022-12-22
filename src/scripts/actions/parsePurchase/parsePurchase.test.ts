@@ -9,7 +9,7 @@ import {
   givePlayersInitialResources,
   unknownSteal,
   offerProposal,
-} from "../../../utils/helpers/testing.helpers";
+} from "../../../utils/helpers/forTest/testing.helpers";
 import { GameData, PurchaseType, ResourceType } from "../../../types";
 import testData from "../../../utils/data";
 import { shuffleArray, emptyResources } from "../../../tests/utils";

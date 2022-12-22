@@ -10,7 +10,7 @@ import {
   discardCards,
   givePlayersInitialResources,
   unknownSteal,
-} from "../../../utils/helpers/testing.helpers";
+} from "../../../utils/helpers/forTest/testing.helpers";
 
 describe("Discard cards", () => {
   let playerDiscarding: string;

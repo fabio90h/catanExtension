@@ -9,7 +9,7 @@ import {
   givePlayersInitialResources,
   playerTrade,
   unknownSteal,
-} from "../../../utils/helpers/testing.helpers";
+} from "../../../utils/helpers/forTest/testing.helpers";
 
 describe("trading with player", () => {
   let result: RenderResult<[GameData, React.Dispatch<Action>]>;

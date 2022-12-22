@@ -8,7 +8,7 @@ import {
   initiateTestingPlayers,
   giveResourcesToPlayer,
   yearOfPlenty,
-} from "../../../utils/helpers/testing.helpers";
+} from "../../../utils/helpers/forTest/testing.helpers";
 
 it("Successfully executes 'Year of Plenty", () => {
   let result: RenderResult<[GameData, React.Dispatch<Action>]>;

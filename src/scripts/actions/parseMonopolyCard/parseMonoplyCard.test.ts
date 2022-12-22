@@ -14,7 +14,7 @@ import {
   initiateTestingPlayers,
   monopoly,
   unknownSteal,
-} from "../../../utils/helpers/testing.helpers";
+} from "../../../utils/helpers/forTest/testing.helpers";
 
 describe("Monopoly card steals all resources from all players", () => {
   let result: RenderResult<[GameData, React.Dispatch<Action>]>;

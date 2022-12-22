@@ -9,7 +9,7 @@ import {
   offerProposal,
   playerMakesPurchase,
   unknownSteal,
-} from "../../../utils/helpers/testing.helpers";
+} from "../../../utils/helpers/forTest/testing.helpers";
 import keywords from "../../../utils/keywords";
 
 describe("Resolve unknown theft from proposal message", () => {

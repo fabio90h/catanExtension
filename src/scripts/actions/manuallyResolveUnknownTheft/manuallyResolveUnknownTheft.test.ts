@@ -8,7 +8,7 @@ import {
   initiateTestingPlayers,
   givePlayersInitialResources,
   unknownSteal,
-} from "../../../utils/helpers/testing.helpers";
+} from "../../../utils/helpers/forTest/testing.helpers";
 import { manuallyResolveUnknownTheft } from "./manuallyResolveUnknownTheft.action";
 
 describe("Manually resolving theft", () => {
