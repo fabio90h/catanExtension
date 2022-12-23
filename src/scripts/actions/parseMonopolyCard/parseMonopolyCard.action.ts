@@ -1,5 +1,6 @@
 import { Action, ActionType } from "../../../reducer";
-import { parseResourceImage } from "../../../utils/index.";
+import { parseResourceImage } from "../../../utils/helpers/general/parseResourceImage/parseResourceImage.general";
+
 import keywords from "../../../utils/keywords";
 
 export const parseMonopolyCard = (

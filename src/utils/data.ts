@@ -1,7 +1,10 @@
 import { ResourceType, PurchaseType } from "../types";
 import keywords from "./keywords";
 
-export default {
+// Gives the necessary data to inform who is playing
+// what are the resources available and how much
+// things cost.
+export const testData = {
   resources: [
     ResourceType.WOOD,
     ResourceType.WHEAT,

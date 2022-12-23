@@ -8,13 +8,11 @@ import {
   UserResources,
   Users,
 } from "./types";
-import {
-  calculateTheftForPlayerAndResource,
-  checkForUserExistence,
-  createVictimHash,
-  exchangeResourcesPure,
-  reduceOtherThefts,
-} from "./utils/index.";
+import { calculateTheftForPlayerAndResources } from "./utils/helpers/general/calculateTheftForPlayerAndResources/calculateTheftForPlayerAndResources.general";
+import { checkForUserExistence } from "./utils/helpers/general/checkForUserExistence/checkForUserExistence.general";
+import { createVictimHash } from "./utils/helpers/general/createVictimHash/createVictimHash.general";
+import { exchangeResourcesPure } from "./utils/helpers/general/exchangeResourcesPure/exchangeResourcesPure.general";
+import { reduceOtherThefts } from "./utils/helpers/general/reduceOtherThefts/reduceOtherThefts.general";
 
 export enum ActionType {
   PURCHASE = "PURCHASE",
@@ -246,7 +244,7 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
       } else {
         // If stealer steals then plays monopoly
         //TODO: REFACTOR: Counts the amount of times a specific resource
-        const possibleResourceTheft = calculateTheftForPlayerAndResource(
+        const possibleResourceTheft = calculateTheftForPlayerAndResources(
           action.payload.user,
           action.payload.stolenResource,
           thefts
@@ -331,7 +329,7 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
             users[offeringPlayer].resources[offeredResource];
 
           // How many did he steal and got stolen from others?
-          const resourceTheftCount = calculateTheftForPlayerAndResource(
+          const resourceTheftCount = calculateTheftForPlayerAndResources(
             offeringPlayer,
             offeredResource,
             thefts
@@ -616,7 +614,7 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
       // PURCHASE
       for (const resource in ResourceType) {
         const resourceCount = users[player].resources[resource]; // How many resources does the player currently have
-        const resourceTheftCount = calculateTheftForPlayerAndResource(
+        const resourceTheftCount = calculateTheftForPlayerAndResources(
           // How many times did this player get stolen from?
           player,
           resource as ResourceType,

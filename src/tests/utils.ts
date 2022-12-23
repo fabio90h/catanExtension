@@ -5,9 +5,9 @@ import {
   UserResources,
   Users,
 } from "../types";
-import { getImg } from "../utils/index.";
 
-import testData from "../utils/data";
+import { testData } from "../utils/data";
+import { getImg } from "../utils/helpers/general/getImg/getImg.general";
 
 type UserProperties = {
   resources: UserResources;

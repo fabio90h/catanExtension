@@ -1,5 +1,5 @@
 import { Action, ActionType } from "../../../reducer";
-import { parseExchangeImages } from "../../../utils/index.";
+import { parseExchangeImages } from "../../../utils/helpers/general/parseExchangeImages/parseExchangeImages.general";
 import keywords from "../../../utils/keywords";
 
 export const parseProposalMessage = (
