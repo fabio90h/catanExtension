@@ -84,13 +84,13 @@ export const givePlayersInitialResources = (
 
 /**
  * Simulate a player making a purchase with resources
- * @param dipatch
+ * @param dispatch
  * @param user
  * @param purchaseType
  * @param color
  */
 export const playerMakesPurchase = (
-  dipatch: React.Dispatch<Action>,
+  dispatch: React.Dispatch<Action>,
   user: string,
   purchaseType: PurchaseType,
   color: string
@@ -105,7 +105,7 @@ export const playerMakesPurchase = (
 
   createChildImgElement(node, purchaseType);
 
-  parsePurchase(node, dipatch);
+  parsePurchase(node, dispatch);
 };
 
 /**

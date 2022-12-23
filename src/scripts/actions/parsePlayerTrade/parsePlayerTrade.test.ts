@@ -35,7 +35,7 @@ describe("trading with player", () => {
     const players = Object.keys(result.current[0].users);
     [offeringPlayer, agreeingPlayer, player3] = shuffleArray(players);
   });
-  it.only("trades successfully", () => {
+  it("trades successfully", () => {
     // Add the resources to make sure the user has the necessary resources to buy
     act(() =>
       givePlayersInitialResources(
@@ -60,18 +60,12 @@ describe("trading with player", () => {
     });
 
     expect(result.current[0].users[offeringPlayer].resources).toStrictEqual({
-      [ResourceType.WOOD]: 0,
+      ...emptyResources,
       [ResourceType.WHEAT]: 1,
-      [ResourceType.BRICK]: 0,
-      [ResourceType.SHEEP]: 0,
-      [ResourceType.STONE]: 0,
     });
     expect(result.current[0].users[agreeingPlayer].resources).toStrictEqual({
-      [ResourceType.WOOD]: 0,
-      [ResourceType.WHEAT]: 0,
-      [ResourceType.BRICK]: 0,
+      ...emptyResources,
       [ResourceType.SHEEP]: 1,
-      [ResourceType.STONE]: 0,
     });
     expect(result.current[0].users[agreeingPlayer].resources).not.toStrictEqual(
       emptyResources
@@ -272,7 +266,7 @@ describe("trading with player", () => {
         [ResourceType.WHEAT]: 1,
       });
     });
-    it("Does not resolves when victim not use stolen resource needed for player trade.", () => {
+    it.skip("Does not resolves when victim not use stolen resource needed for player trade.", () => {
       const stealerName = offeringPlayer;
       const playerName = agreeingPlayer;
 
