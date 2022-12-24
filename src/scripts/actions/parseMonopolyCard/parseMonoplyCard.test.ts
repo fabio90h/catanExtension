@@ -8,13 +8,11 @@ import {
   countTotalTypeInArray,
 } from "../../../tests/utils";
 import { GameData, ResourceType } from "../../../types";
-import {
-  givePlayersInitialResources,
-  giveResourcesToPlayer,
-  initiateTestingPlayers,
-  monopoly,
-  unknownSteal,
-} from "../../../utils/helpers/forTest/testing.helpers";
+import { givePlayersInitialResources } from "../../../utils/helpers/simulator/givePlayersInitialResources/givePlayersInitialResources.general";
+import { giveResourcesToPlayer } from "../../../utils/helpers/simulator/giveResourcesToPlayer/giveResourcesToPlayer.simulator";
+import { initiateTestingPlayers } from "../../../utils/helpers/simulator/initiateTestingPlayers/initiateTestingPlayers.simulator";
+import { monopoly } from "../../../utils/helpers/simulator/monopoly/monopoly.simulator";
+import { unknownSteal } from "../../../utils/helpers/simulator/unknownSteal/unknownSteal.simulator";
 
 describe("Monopoly card steals all resources from all players", () => {
   let result: RenderResult<[GameData, React.Dispatch<Action>]>;

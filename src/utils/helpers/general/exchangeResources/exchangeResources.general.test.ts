@@ -4,10 +4,9 @@ import { act } from "react-dom/test-utils";
 import { Action, reducer } from "../../../../reducer";
 import { emptyResources, shuffleArray } from "../../../../tests/utils";
 import { GameData, ResourceType } from "../../../../types";
-import {
-  givePlayersInitialResources,
-  initiateTestingPlayers,
-} from "../../forTest/testing.helpers";
+import { givePlayersInitialResources } from "../../simulator/givePlayersInitialResources/givePlayersInitialResources.general";
+import { initiateTestingPlayers } from "../../simulator/initiateTestingPlayers/initiateTestingPlayers.simulator";
+
 import { exchangeResources } from "./exchangeResources.general";
 
 describe("exchangeResources", () => {

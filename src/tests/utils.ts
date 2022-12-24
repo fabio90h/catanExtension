@@ -61,14 +61,7 @@ const startingResourcesAndConfig: UserProperties[] = [
 ];
 
 /**
- * Returns a random number between min (inclusive) and max (exclusive)
- */
-const getRandomArbitrary = (min: number, max: number) => {
-  return Math.floor(Math.random() * (max - min) + min);
-};
-
-/**
- * Suffles array
+ * Shuffles array
  * TODO: Can be refactored
  */
 export const shuffleArray = <T>(array: Array<T>) => {
@@ -89,17 +82,6 @@ export const shuffleArray = <T>(array: Array<T>) => {
   }
 
   return array;
-};
-
-export const getRandomResources = (amount: number = 9) => {
-  const gainedResources: ResourceType[] = [];
-  const resourceAmount = getRandomArbitrary(1, amount);
-  for (let i = 0; i < resourceAmount; i++) {
-    const randomIndex = getRandomArbitrary(0, testData.resources.length);
-    gainedResources.push(testData.resources[randomIndex]);
-  }
-
-  return gainedResources;
 };
 
 /**

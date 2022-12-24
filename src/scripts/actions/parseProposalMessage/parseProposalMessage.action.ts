@@ -15,6 +15,7 @@ export const parseProposalMessage = (
 
     //TODO: Figure out what the player is trying to build with this offer. Consider ports as well
 
+    // Resolve or reduce thefts based on offers
     dispatch({
       type: ActionType.RESOLVE_UNKNOWN_STEAL_WITH_OFFERS,
       payload: { player, offeredResources, wantedResources },

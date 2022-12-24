@@ -3,13 +3,12 @@ import React from "react";
 import { Action, reducer } from "../../../reducer";
 import { emptyResources, shuffleArray } from "../../../tests/utils";
 import { GameData, PurchaseType, ResourceType } from "../../../types";
-import {
-  givePlayersInitialResources,
-  initiateTestingPlayers,
-  offerProposal,
-  playerMakesPurchase,
-  unknownSteal,
-} from "../../../utils/helpers/forTest/testing.helpers";
+import { givePlayersInitialResources } from "../../../utils/helpers/simulator/givePlayersInitialResources/givePlayersInitialResources.general";
+import { initiateTestingPlayers } from "../../../utils/helpers/simulator/initiateTestingPlayers/initiateTestingPlayers.simulator";
+import { offerProposal } from "../../../utils/helpers/simulator/offerProposal/offerProposal.simulator";
+import { playerMakesPurchase } from "../../../utils/helpers/simulator/playerMakesPurchase/playerMakesPurchase.general";
+import { unknownSteal } from "../../../utils/helpers/simulator/unknownSteal/unknownSteal.simulator";
+
 import keywords from "../../../utils/keywords";
 
 describe("Resolve unknown theft from proposal message", () => {
