@@ -22,7 +22,7 @@ export default {
 
   //Development Cards
   stoleAllOfSnippet: "used Monopoly",
-  monoplyStole: "stole ",
+  monopolyStole: "stole ",
 
   yearOfPlenty: " took from bank",
 

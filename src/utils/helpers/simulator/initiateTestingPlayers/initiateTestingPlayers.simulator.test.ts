@@ -3,7 +3,7 @@ import React from "react";
 import { Action, reducer } from "../../../../reducer";
 import { emptyResources, shuffleArray } from "../../../../tests/utils";
 import { GameData } from "../../../../types";
-import { initiateTestingPlayers } from "./initiateTestingPlayers.simulator";
+import { initiateTestingPlayers } from ".";
 
 describe("initiateTestingPlayers", () => {
   let result: RenderResult<[GameData, React.Dispatch<Action>]>;

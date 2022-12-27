@@ -4,11 +4,11 @@ import { act } from "react-dom/test-utils";
 import { Action, reducer } from "../../../reducer";
 import { emptyResources, shuffleArray } from "../../../tests/utils";
 import { GameData, ResourceType } from "../../../types";
-import { bankTrade } from "../../../utils/helpers/simulator/bankTrade/bankTrade.simulator";
-import { givePlayersInitialResources } from "../../../utils/helpers/simulator/givePlayersInitialResources/givePlayersInitialResources.general";
-import { giveResourcesToPlayer } from "../../../utils/helpers/simulator/giveResourcesToPlayer/giveResourcesToPlayer.simulator";
-import { initiateTestingPlayers } from "../../../utils/helpers/simulator/initiateTestingPlayers/initiateTestingPlayers.simulator";
-import { unknownSteal } from "../../../utils/helpers/simulator/unknownSteal/unknownSteal.simulator";
+import { bankTrade } from "../../../utils/helpers/simulator/bankTrade";
+import { givePlayersInitialResources } from "../../../utils/helpers/simulator/givePlayersInitialResources";
+import { giveResourcesToPlayer } from "../../../utils/helpers/simulator/giveResourcesToPlayer";
+import { initiateTestingPlayers } from "../../../utils/helpers/simulator/initiateTestingPlayers";
+import { unknownSteal } from "../../../utils/helpers/simulator/unknownSteal";
 
 describe("trading with bank", () => {
   let result: RenderResult<[GameData, React.Dispatch<Action>]>;

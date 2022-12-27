@@ -6,8 +6,8 @@ import { reducer } from "../../../reducer";
 import { ResourceType } from "../../../types";
 import { testData } from "../../../utils/data";
 import { shuffleArray, emptyResources } from "../../../tests/utils";
-import { giveResourcesToPlayer } from "../../../utils/helpers/simulator/giveResourcesToPlayer/giveResourcesToPlayer.simulator";
-import { initiateTestingPlayers } from "../../../utils/helpers/simulator/initiateTestingPlayers/initiateTestingPlayers.simulator";
+import { giveResourcesToPlayer } from "../../../utils/helpers/simulator/giveResourcesToPlayer";
+import { initiateTestingPlayers } from "../../../utils/helpers/simulator/initiateTestingPlayers";
 
 it("Adds resources when 'got' message appears", () => {
   const { result } = renderHook(() =>

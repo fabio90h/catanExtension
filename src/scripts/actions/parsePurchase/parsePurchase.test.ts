@@ -6,11 +6,11 @@ import { Action, reducer } from "../../../reducer";
 import { GameData, PurchaseType, ResourceType } from "../../../types";
 import { testData } from "../../../utils/data";
 import { shuffleArray, emptyResources } from "../../../tests/utils";
-import { givePlayersInitialResources } from "../../../utils/helpers/simulator/givePlayersInitialResources/givePlayersInitialResources.general";
-import { giveResourcesToPlayer } from "../../../utils/helpers/simulator/giveResourcesToPlayer/giveResourcesToPlayer.simulator";
-import { initiateTestingPlayers } from "../../../utils/helpers/simulator/initiateTestingPlayers/initiateTestingPlayers.simulator";
-import { playerMakesPurchase } from "../../../utils/helpers/simulator/playerMakesPurchase/playerMakesPurchase.general";
-import { unknownSteal } from "../../../utils/helpers/simulator/unknownSteal/unknownSteal.simulator";
+import { givePlayersInitialResources } from "../../../utils/helpers/simulator/givePlayersInitialResources";
+import { giveResourcesToPlayer } from "../../../utils/helpers/simulator/giveResourcesToPlayer";
+import { initiateTestingPlayers } from "../../../utils/helpers/simulator/initiateTestingPlayers";
+import { playerMakesPurchase } from "../../../utils/helpers/simulator/playerMakesPurchase";
+import { unknownSteal } from "../../../utils/helpers/simulator/unknownSteal";
 
 describe("Spending resources works as expected", () => {
   let result: RenderResult<[GameData, React.Dispatch<Action>]>;

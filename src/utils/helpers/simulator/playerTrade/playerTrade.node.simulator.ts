@@ -1,12 +1,9 @@
-import { Action } from "../../../../reducer";
-import { parsePlayersTrade } from "../../../../scripts/actions/parsePlayerTrade/parsePlayerTrade.actions";
 import {
   createDivElement,
   createChildImgElement,
 } from "../../../../tests/utils";
 import { ResourceType } from "../../../../types";
 import keywords from "../../../keywords";
-import { offerProposal } from "../offerProposal/offerProposal.simulator";
 
 /**
  * Simulates a player accepting a trade offer
@@ -17,16 +14,13 @@ import { offerProposal } from "../offerProposal/offerProposal.simulator";
  * @param took
  * @param color
  */
-export const playerTrade = (
-  dispatch: React.Dispatch<Action>,
+export const playerTradeNode = (
   offeringPlayer: string,
   agreedPlayer: string,
   gave: ResourceType[],
   took: ResourceType[],
   color: string
 ) => {
-  offerProposal(dispatch, offeringPlayer, gave, took, color);
-
   const node = createDivElement(
     color,
     offeringPlayer,
@@ -49,5 +43,5 @@ export const playerTrade = (
   );
   node.appendChild(textNodeAgree);
 
-  parsePlayersTrade(node, dispatch);
+  return node;
 };

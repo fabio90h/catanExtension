@@ -3,11 +3,11 @@ import React from "react";
 import { Action, reducer } from "../../../reducer";
 import { emptyResources, shuffleArray } from "../../../tests/utils";
 import { GameData, PurchaseType, ResourceType } from "../../../types";
-import { givePlayersInitialResources } from "../../../utils/helpers/simulator/givePlayersInitialResources/givePlayersInitialResources.general";
-import { initiateTestingPlayers } from "../../../utils/helpers/simulator/initiateTestingPlayers/initiateTestingPlayers.simulator";
-import { offerProposal } from "../../../utils/helpers/simulator/offerProposal/offerProposal.simulator";
-import { playerMakesPurchase } from "../../../utils/helpers/simulator/playerMakesPurchase/playerMakesPurchase.general";
-import { unknownSteal } from "../../../utils/helpers/simulator/unknownSteal/unknownSteal.simulator";
+import { givePlayersInitialResources } from "../../../utils/helpers/simulator/givePlayersInitialResources";
+import { initiateTestingPlayers } from "../../../utils/helpers/simulator/initiateTestingPlayers";
+import { offerProposal } from "../../../utils/helpers/simulator/offerProposal";
+import { playerMakesPurchase } from "../../../utils/helpers/simulator/playerMakesPurchase";
+import { unknownSteal } from "../../../utils/helpers/simulator/unknownSteal";
 
 import keywords from "../../../utils/keywords";
 

@@ -13,7 +13,7 @@ export const parseMonopolyCard = (
     return false;
   if (nodeText) {
     const player = nodeText.split(" ")[0];
-    const stoleAmount = parseInt(nodeText.split(keywords.monoplyStole)[1]);
+    const stoleAmount = parseInt(nodeText.split(keywords.monopolyStole)[1]);
 
     const stolenResource = parseResourceImage(node)[0];
 

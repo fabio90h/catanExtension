@@ -1,5 +1,3 @@
-import { Action } from "../../../../reducer";
-import { parsePurchase } from "../../../../scripts/actions/parsePurchase/parsePurchase.actions";
 import {
   createDivElement,
   createChildImgElement,
@@ -14,8 +12,7 @@ import keywords from "../../../keywords";
  * @param purchaseType
  * @param color
  */
-export const playerMakesPurchase = (
-  dispatch: React.Dispatch<Action>,
+export const playerMakesPurchaseNode = (
   user: string,
   purchaseType: PurchaseType,
   color: string
@@ -30,5 +27,5 @@ export const playerMakesPurchase = (
 
   createChildImgElement(node, purchaseType);
 
-  parsePurchase(node, dispatch);
+  return node;
 };

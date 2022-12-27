@@ -3,8 +3,8 @@ import React from "react";
 import { Action, reducer } from "../../../../reducer";
 import { shuffleArray, emptyResources } from "../../../../tests/utils";
 import { GameData, ResourceType } from "../../../../types";
-import { initiateTestingPlayers } from "../initiateTestingPlayers/initiateTestingPlayers.simulator";
-import { givePlayersInitialResources } from "./givePlayersInitialResources.general";
+import { initiateTestingPlayers } from "../initiateTestingPlayers";
+import { givePlayersInitialResources } from ".";
 
 it("givePlayersInitialResources", () => {
   let result: RenderResult<[GameData, React.Dispatch<Action>]>;

@@ -1,5 +1,3 @@
-import { Action } from "../../../../reducer";
-import { parseProposalMessage } from "../../../../scripts/actions/parseProposalMessage/parseProposalMessage.action";
 import {
   createDivElement,
   createChildImgElement,
@@ -15,8 +13,7 @@ import keywords from "../../../keywords";
  * @param want
  * @param color
  */
-export const offerProposal = (
-  dispatch: React.Dispatch<Action>,
+export const offerProposalNode = (
   offeringPlayer: string,
   offer: ResourceType[],
   want: ResourceType[],
@@ -35,5 +32,5 @@ export const offerProposal = (
     createChildImgElement(node, resource);
   });
 
-  parseProposalMessage(node, dispatch);
+  return node;
 };

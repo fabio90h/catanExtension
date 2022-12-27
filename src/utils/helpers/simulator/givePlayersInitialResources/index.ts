@@ -1,6 +1,6 @@
 import { Action } from "../../../../reducer";
 import { ResourceType, Users } from "../../../../types";
-import { giveResourcesToPlayer } from "../giveResourcesToPlayer/giveResourcesToPlayer.simulator";
+import { giveResourcesToPlayer } from "../giveResourcesToPlayer";
 
 /**
  * Method to give players defined resources.

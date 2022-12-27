@@ -1,5 +1,3 @@
-import { Action } from "../../../../reducer";
-import { parseDiscardMessage } from "../../../../scripts/actions/parseDiscardMessage/parseDiscardMessage.action";
 import {
   createDivElement,
   createChildImgElement,
@@ -7,8 +5,7 @@ import {
 import { ResourceType } from "../../../../types";
 import keywords from "../../../keywords";
 
-export const discardCards = (
-  dispatch: React.Dispatch<Action>,
+export const discardCardsNode = (
   player: string,
   color: string,
   discardedResources: ResourceType[]
@@ -19,5 +16,5 @@ export const discardCards = (
     createChildImgElement(node, resource);
   });
 
-  parseDiscardMessage(node, dispatch);
+  return node;
 };

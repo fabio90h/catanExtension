@@ -8,11 +8,11 @@ import {
   countTotalTypeInArray,
 } from "../../../tests/utils";
 import { GameData, ResourceType } from "../../../types";
-import { givePlayersInitialResources } from "../../../utils/helpers/simulator/givePlayersInitialResources/givePlayersInitialResources.general";
-import { giveResourcesToPlayer } from "../../../utils/helpers/simulator/giveResourcesToPlayer/giveResourcesToPlayer.simulator";
-import { initiateTestingPlayers } from "../../../utils/helpers/simulator/initiateTestingPlayers/initiateTestingPlayers.simulator";
-import { monopoly } from "../../../utils/helpers/simulator/monopoly/monopoly.simulator";
-import { unknownSteal } from "../../../utils/helpers/simulator/unknownSteal/unknownSteal.simulator";
+import { givePlayersInitialResources } from "../../../utils/helpers/simulator/givePlayersInitialResources";
+import { giveResourcesToPlayer } from "../../../utils/helpers/simulator/giveResourcesToPlayer";
+import { initiateTestingPlayers } from "../../../utils/helpers/simulator/initiateTestingPlayers";
+import { monopoly } from "../../../utils/helpers/simulator/monopoly";
+import { unknownSteal } from "../../../utils/helpers/simulator/unknownSteal";
 
 describe("Monopoly card steals all resources from all players", () => {
   let result: RenderResult<[GameData, React.Dispatch<Action>]>;

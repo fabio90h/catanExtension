@@ -4,9 +4,9 @@ import { act } from "react-dom/test-utils";
 import { Action, reducer } from "../../../reducer";
 import { shuffleArray } from "../../../tests/utils";
 import { GameData, ResourceType } from "../../../types";
-import { giveResourcesToPlayer } from "../../../utils/helpers/simulator/giveResourcesToPlayer/giveResourcesToPlayer.simulator";
-import { initiateTestingPlayers } from "../../../utils/helpers/simulator/initiateTestingPlayers/initiateTestingPlayers.simulator";
-import { yearOfPlenty } from "../../../utils/helpers/simulator/yearOfPlenty/yearOfPlenty.simulator";
+import { giveResourcesToPlayer } from "../../../utils/helpers/simulator/giveResourcesToPlayer";
+import { initiateTestingPlayers } from "../../../utils/helpers/simulator/initiateTestingPlayers";
+import { yearOfPlenty } from "../../../utils/helpers/simulator/yearOfPlenty";
 
 it("Successfully executes 'Year of Plenty", () => {
   let result: RenderResult<[GameData, React.Dispatch<Action>]>;

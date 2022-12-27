@@ -1,5 +1,3 @@
-import { Action } from "../../../../reducer";
-import { parseYearOfPlenty } from "../../../../scripts/actions/parseYearOfPlenty/parseYearOfPlenty.actions";
 import {
   createDivElement,
   createChildImgElement,
@@ -7,8 +5,7 @@ import {
 import { ResourceType } from "../../../../types";
 import keywords from "../../../keywords";
 
-export const yearOfPlenty = (
-  dispatch: React.Dispatch<Action>,
+export const yearOfPlentyNode = (
   player: string,
   color: string,
   pickedResources: ResourceType[]
@@ -19,5 +16,5 @@ export const yearOfPlenty = (
     createChildImgElement(node, resource);
   });
 
-  parseYearOfPlenty(node, dispatch);
+  return node;
 };

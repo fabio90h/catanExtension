@@ -15,8 +15,7 @@ import keywords from "../../../keywords";
  * @param took
  * @param color
  */
-export const bankTrade = (
-  dispatch: React.Dispatch<Action>,
+export const bankTradeNode = (
   user: string,
   gave: ResourceType[],
   took: ResourceType[],
@@ -35,5 +34,5 @@ export const bankTrade = (
     createChildImgElement(node, resource);
   });
 
-  parseBankTrade(node, dispatch);
+  return node;
 };

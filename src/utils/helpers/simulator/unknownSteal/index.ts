@@ -1,7 +1,6 @@
 import { Action } from "../../../../reducer";
 import { parseStoleUnknownMessage } from "../../../../scripts/actions/parseStoleUnknownMessage/parseStoleUnknownMessage.action";
-import { createDivElement } from "../../../../tests/utils";
-import keywords from "../../../keywords";
+import { unknownStealNode } from "./unknownSteal.node.simulator";
 
 export const unknownSteal = (
   dispatch: React.Dispatch<Action>,
@@ -9,12 +8,5 @@ export const unknownSteal = (
   stealer: string,
   color: string
 ) => {
-  const node = createDivElement(
-    color,
-    stealer,
-    `${keywords.stoleFromSnippet}`,
-    victim
-  );
-
-  parseStoleUnknownMessage(node, dispatch);
+  parseStoleUnknownMessage(unknownStealNode(victim, stealer, color), dispatch);
 };
