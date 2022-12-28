@@ -1,5 +1,5 @@
 import { Action, ActionType } from "../../../reducer";
-import { parsePurchaseImage } from "../../../utils/index.";
+import { parsePurchaseImage } from "../../../utils/helpers/general/parsePurchaseImage/parsePurchaseImage.general";
 import keywords from "../../../utils/keywords";
 
 /**

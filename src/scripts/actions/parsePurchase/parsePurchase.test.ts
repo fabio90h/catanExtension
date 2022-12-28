@@ -2,17 +2,16 @@ import { renderHook, RenderResult } from "@testing-library/react-hooks";
 import React from "react";
 import { act } from "react-dom/test-utils";
 import { Action, reducer } from "../../../reducer";
-import {
-  initiateTestingPlayers,
-  giveResourcesToPlayer,
-  playerMakesPurchase,
-  givePlayersInitialResources,
-  unknownSteal,
-  offerProposal,
-} from "../../../utils/helpers/testing.helpers";
+
 import { GameData, PurchaseType, ResourceType } from "../../../types";
-import testData from "../../../utils/data";
-import { shuffleArray, emptyResources } from "../../../tests/utils";
+import { emptyResources, testData } from "../../../utils/data";
+import { shuffleArray } from "../../../utils/helpers/general/shuffleArray/shuffleArray.general";
+
+import { givePlayersInitialResources } from "../../../utils/helpers/simulator/givePlayersInitialResources";
+import { giveResourcesToPlayer } from "../../../utils/helpers/simulator/giveResourcesToPlayer";
+import { initiateTestingPlayers } from "../../../utils/helpers/simulator/initiateTestingPlayers";
+import { playerMakesPurchase } from "../../../utils/helpers/simulator/playerMakesPurchase";
+import { unknownSteal } from "../../../utils/helpers/simulator/unknownSteal";
 
 describe("Spending resources works as expected", () => {
   let result: RenderResult<[GameData, React.Dispatch<Action>]>;

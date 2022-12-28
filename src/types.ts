@@ -7,7 +7,7 @@ export enum ResourceType {
 }
 
 export enum UnknownType {
-  UNKOWN = "UNKNOWN",
+  UNKNOWN = "UNKNOWN",
 }
 
 export enum PurchaseType {
@@ -25,13 +25,7 @@ export type Theft = {
 export type UserResources = Record<ResourceType, number>;
 export type UserConfig = { color: string };
 
-export type Users = Record<
-  string,
-  {
-    resources: UserResources;
-    config: UserConfig;
-  }
->;
+export type Users = Record<string, UserProperties>;
 export type ImageType = PurchaseType | ResourceType | UnknownType;
 
 export type GameData = { users: Users; thefts: Theft[] };
@@ -39,4 +33,9 @@ export type GameData = { users: Users; thefts: Theft[] };
 export type Victim = {
   resourceAmount: number;
   reoccurrence: number;
+};
+
+export type UserProperties = {
+  resources: UserResources;
+  config: UserConfig;
 };

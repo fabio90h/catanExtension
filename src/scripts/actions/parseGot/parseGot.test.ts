@@ -2,13 +2,13 @@ import { renderHook } from "@testing-library/react-hooks";
 import React from "react";
 import { act } from "react-dom/test-utils";
 import { reducer } from "../../../reducer";
-import {
-  initiateTestingPlayers,
-  giveResourcesToPlayer,
-} from "../../../utils/helpers/testing.helpers";
+
 import { ResourceType } from "../../../types";
-import testData from "../../../utils/data";
-import { shuffleArray, emptyResources } from "../../../tests/utils";
+import { emptyResources, testData } from "../../../utils/data";
+import { shuffleArray } from "../../../utils/helpers/general/shuffleArray/shuffleArray.general";
+
+import { giveResourcesToPlayer } from "../../../utils/helpers/simulator/giveResourcesToPlayer";
+import { initiateTestingPlayers } from "../../../utils/helpers/simulator/initiateTestingPlayers";
 
 it("Adds resources when 'got' message appears", () => {
   const { result } = renderHook(() =>

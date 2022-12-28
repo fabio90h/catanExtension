@@ -8,13 +8,11 @@ import {
   UserResources,
   Users,
 } from "./types";
-import {
-  calculateTheftForPlayerAndResource,
-  checkForUserExistance,
-  createVictimHash,
-  exchangeResourcesPure,
-  reduceOtherThefts,
-} from "./utils/index.";
+import { calculateTheftForPlayerAndResources } from "./utils/helpers/general/calculateTheftForPlayerAndResources/calculateTheftForPlayerAndResources.general";
+import { checkForUserExistence } from "./utils/helpers/general/checkForUserExistence/checkForUserExistence.general";
+import { createVictimHash } from "./utils/helpers/general/createVictimHash/createVictimHash.general";
+import { exchangeResourcesPure } from "./utils/helpers/general/exchangeResourcesPure/exchangeResourcesPure.general";
+import { reduceOtherThefts } from "./utils/helpers/general/reduceOtherThefts/reduceOtherThefts.general";
 
 export enum ActionType {
   PURCHASE = "PURCHASE",
@@ -112,7 +110,7 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
       };
     }
     case ActionType.ADD_RESOURCES: {
-      checkForUserExistance(action.payload.user, state.users);
+      checkForUserExistence(action.payload.user, state.users);
       const users: Users = { ...state.users };
       const tempResources: UserResources = {
         ...users[action.payload.user].resources,
@@ -135,7 +133,7 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
       };
     }
     case ActionType.SUBTRACT_RESOURCES: {
-      checkForUserExistance(action.payload.user, state.users);
+      checkForUserExistence(action.payload.user, state.users);
       const users: Users = { ...state.users };
 
       const tempResources: UserResources = {
@@ -159,7 +157,7 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
       };
     }
     case ActionType.PURCHASE: {
-      checkForUserExistance(action.payload.user, state.users);
+      checkForUserExistence(action.payload.user, state.users);
       const users: Users = { ...state.users };
 
       const tempResources: UserResources = {
@@ -205,7 +203,7 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
       };
     }
     case ActionType.STEAL_ALL: {
-      checkForUserExistance(action.payload.user, state.users);
+      checkForUserExistence(action.payload.user, state.users);
       let users: Users = { ...state.users };
       let thefts: Theft[] = [...state.thefts];
 
@@ -246,7 +244,7 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
       } else {
         // If stealer steals then plays monopoly
         //TODO: REFACTOR: Counts the amount of times a specific resource
-        const possibleResourceTheft = calculateTheftForPlayerAndResource(
+        const possibleResourceTheft = calculateTheftForPlayerAndResources(
           action.payload.user,
           action.payload.stolenResource,
           thefts
@@ -331,7 +329,7 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
             users[offeringPlayer].resources[offeredResource];
 
           // How many did he steal and got stolen from others?
-          const resourceTheftCount = calculateTheftForPlayerAndResource(
+          const resourceTheftCount = calculateTheftForPlayerAndResources(
             offeringPlayer,
             offeredResource,
             thefts
@@ -492,8 +490,8 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
       return { users, thefts };
     }
     case ActionType.UNKNOWN_STEAL: {
-      checkForUserExistance(action.payload.victim, state.users);
-      checkForUserExistance(action.payload.stealer, state.users);
+      checkForUserExistence(action.payload.victim, state.users);
+      checkForUserExistence(action.payload.stealer, state.users);
 
       const users: Users = { ...state.users };
       const thefts = [...state.thefts];
@@ -616,7 +614,7 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
       // PURCHASE
       for (const resource in ResourceType) {
         const resourceCount = users[player].resources[resource]; // How many resources does the player currently have
-        const resourceTheftCount = calculateTheftForPlayerAndResource(
+        const resourceTheftCount = calculateTheftForPlayerAndResources(
           // How many times did this player get stolen from?
           player,
           resource as ResourceType,

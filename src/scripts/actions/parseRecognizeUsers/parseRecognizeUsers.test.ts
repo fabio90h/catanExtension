@@ -2,12 +2,11 @@ import { renderHook } from "@testing-library/react-hooks";
 import React from "react";
 import { act } from "react-dom/test-utils";
 import { reducer } from "../../../reducer";
-import {
-  createPlayersAndProperties,
-  createDivElement,
-  createChildImgElement,
-} from "../../../tests/utils";
+
 import { ResourceType } from "../../../types";
+import { createChildImgElement } from "../../../utils/helpers/general/createChildImgElement/createChildImgElement.general";
+import { createDivElement } from "../../../utils/helpers/general/createDivElement/createDivElement.general";
+import { createPlayersAndProperties } from "../../../utils/helpers/general/createPlayersAndProperties/createPlayersAndProperties.general";
 import keywords from "../../../utils/keywords";
 import { parseRecognizeUsers } from "./parseRecognizeUsers.actions";
 

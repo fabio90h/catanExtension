@@ -1,5 +1,6 @@
 import { Action, ActionType } from "../../../reducer";
-import { parseResourceImage } from "../../../utils/index.";
+import { parseResourceImage } from "../../../utils/helpers/general/parseResourceImage/parseResourceImage.general";
+
 import keywords from "../../../utils/keywords";
 
 export const parseMonopolyCard = (
@@ -12,7 +13,7 @@ export const parseMonopolyCard = (
     return false;
   if (nodeText) {
     const player = nodeText.split(" ")[0];
-    const stoleAmount = parseInt(nodeText.split(keywords.monoplyStole)[1]);
+    const stoleAmount = parseInt(nodeText.split(keywords.monopolyStole)[1]);
 
     const stolenResource = parseResourceImage(node)[0];
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { GameData, ResourceType, Theft as TheftType } from "../types";
-import { calculateTheftForPlayerAndResource, getImg } from "../utils/index.";
+import { calculateTheftForPlayerAndResources, getImg } from "../utils/index.";
 import styled from "styled-components";
 import Theft from "./Theft";
 import { Action } from "../reducer";
@@ -124,7 +124,7 @@ const Table: React.FC<Props> = (props) => {
               </TablePlayerBodyCell>
               {/* COUNT WITH POSSIBLE THEFT*/}
               {tableHeaders.map((header) => {
-                const theftCount = calculateTheftForPlayerAndResource(
+                const theftCount = calculateTheftForPlayerAndResources(
                   user,
                   header,
                   thefts
