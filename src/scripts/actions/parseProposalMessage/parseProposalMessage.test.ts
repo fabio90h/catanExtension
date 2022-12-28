@@ -1,8 +1,10 @@
 import { act, renderHook, RenderResult } from "@testing-library/react-hooks";
 import React from "react";
 import { Action, reducer } from "../../../reducer";
-import { emptyResources, shuffleArray } from "../../../tests/utils";
+
 import { GameData, PurchaseType, ResourceType } from "../../../types";
+import { emptyResources } from "../../../utils/data";
+import { shuffleArray } from "../../../utils/helpers/general/shuffleArray/shuffleArray.general";
 import { givePlayersInitialResources } from "../../../utils/helpers/simulator/givePlayersInitialResources";
 import { initiateTestingPlayers } from "../../../utils/helpers/simulator/initiateTestingPlayers";
 import { offerProposal } from "../../../utils/helpers/simulator/offerProposal";

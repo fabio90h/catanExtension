@@ -1,11 +1,7 @@
-import { Action } from "../../../../reducer";
-import { parseBankTrade } from "../../../../scripts/actions/parseBankTrade/parseBankTrade.action";
-import {
-  createDivElement,
-  createChildImgElement,
-} from "../../../../tests/utils";
 import { ResourceType } from "../../../../types";
 import keywords from "../../../keywords";
+import { createChildImgElement } from "../../general/createChildImgElement/createChildImgElement.general";
+import { createDivElement } from "../../general/createDivElement/createDivElement.general";
 
 /**
  * Simulate a player making a trade with the bank

@@ -1,10 +1,8 @@
-import {
-  createPlayersAndProperties,
-  createDivElement,
-  createChildImgElement,
-} from "../../../../tests/utils";
 import { PurchaseType } from "../../../../types";
 import keywords from "../../../keywords";
+import { createChildImgElement } from "../createChildImgElement/createChildImgElement.general";
+import { createDivElement } from "../createDivElement/createDivElement.general";
+import { createPlayersAndProperties } from "../createPlayersAndProperties/createPlayersAndProperties.general";
 import { parsePurchaseImage } from "./parsePurchaseImage.general";
 
 it("parse city purchase images to PurchaseType", () => {

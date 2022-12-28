@@ -1,5 +1,5 @@
-import { emptyResources } from "../../../../tests/utils";
 import { ResourceType, Users } from "../../../../types";
+import { emptyResources } from "../../../data";
 import { exchangeResourcesPure } from "./exchangeResourcesPure.general";
 
 const users: Users = {

@@ -54,7 +54,7 @@ describe("PurchaseType", () => {
 });
 
 it("for unknown", () => {
-  expect(getImg(UnknownType.UNKOWN)).toBe(
+  expect(getImg(UnknownType.UNKNOWN)).toBe(
     `https://colonist.io/dist/images/${keywords.unknown}.svg`
   );
 });

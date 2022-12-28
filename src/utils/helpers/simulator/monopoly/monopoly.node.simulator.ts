@@ -1,9 +1,7 @@
-import {
-  createDivElement,
-  createChildImgElement,
-} from "../../../../tests/utils";
 import { ResourceType } from "../../../../types";
 import keywords from "../../../keywords";
+import { createChildImgElement } from "../../general/createChildImgElement/createChildImgElement.general";
+import { createDivElement } from "../../general/createDivElement/createDivElement.general";
 
 /**
  * Simulates a player playing the monopoly card

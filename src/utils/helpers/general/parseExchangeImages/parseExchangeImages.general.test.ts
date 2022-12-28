@@ -1,10 +1,8 @@
-import {
-  createPlayersAndProperties,
-  createDivElement,
-  createChildImgElement,
-} from "../../../../tests/utils";
 import { ResourceType } from "../../../../types";
 import keywords from "../../../keywords";
+import { createChildImgElement } from "../createChildImgElement/createChildImgElement.general";
+import { createDivElement } from "../createDivElement/createDivElement.general";
+import { createPlayersAndProperties } from "../createPlayersAndProperties/createPlayersAndProperties.general";
 import { parseExchangeImages } from "./parseExchangeImages.general";
 
 it("parse the resource images that is being traded with the bank", () => {

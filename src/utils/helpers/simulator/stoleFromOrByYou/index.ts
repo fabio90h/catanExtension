@@ -1,11 +1,10 @@
 import { Action } from "../../../../reducer";
 import { parseStoleFromYouMessage } from "../../../../scripts/actions/parseStoleFromYouMessage/parseStoleFromYouMessage.action";
-import {
-  createDivElement,
-  createChildImgElement,
-} from "../../../../tests/utils";
+
 import { ResourceType } from "../../../../types";
 import keywords from "../../../keywords";
+import { createChildImgElement } from "../../general/createChildImgElement/createChildImgElement.general";
+import { createDivElement } from "../../general/createDivElement/createDivElement.general";
 
 export const stoleFromOrByYou = (
   dispatch: React.Dispatch<Action>,

@@ -1,5 +1,5 @@
-import { createDivElement } from "../../../../tests/utils";
 import keywords from "../../../keywords";
+import { createDivElement } from "../../general/createDivElement/createDivElement.general";
 
 export const unknownStealNode = (
   victim: string,

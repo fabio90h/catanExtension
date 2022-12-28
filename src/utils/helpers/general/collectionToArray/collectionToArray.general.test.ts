@@ -1,10 +1,8 @@
-import {
-  createPlayersAndProperties,
-  createDivElement,
-  createChildImgElement,
-} from "../../../../tests/utils";
 import { PurchaseType, ResourceType } from "../../../../types";
 import keywords from "../../../keywords";
+import { createChildImgElement } from "../createChildImgElement/createChildImgElement.general";
+import { createDivElement } from "../createDivElement/createDivElement.general";
+import { createPlayersAndProperties } from "../createPlayersAndProperties/createPlayersAndProperties.general";
 import { getImg } from "../getImg/getImg.general";
 import { collectionToArray } from "./collectionToArray.general";
 

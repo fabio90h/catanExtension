@@ -1,12 +1,11 @@
 import { Action } from "../../../../reducer";
 import { parseRecognizeUsers } from "../../../../scripts/actions/parseRecognizeUsers/parseRecognizeUsers.actions";
-import {
-  createPlayersAndProperties,
-  createDivElement,
-  createChildImgElement,
-} from "../../../../tests/utils";
+
 import { ResourceType } from "../../../../types";
 import keywords from "../../../keywords";
+import { createChildImgElement } from "../../general/createChildImgElement/createChildImgElement.general";
+import { createDivElement } from "../../general/createDivElement/createDivElement.general";
+import { createPlayersAndProperties } from "../../general/createPlayersAndProperties/createPlayersAndProperties.general";
 
 export const initiateTestingPlayers = (
   dispatch: React.Dispatch<Action>,

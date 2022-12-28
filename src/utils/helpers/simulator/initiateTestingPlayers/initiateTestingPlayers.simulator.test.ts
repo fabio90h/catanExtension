@@ -1,9 +1,11 @@
 import { act, renderHook, RenderResult } from "@testing-library/react-hooks";
 import React from "react";
 import { Action, reducer } from "../../../../reducer";
-import { emptyResources, shuffleArray } from "../../../../tests/utils";
+
 import { GameData } from "../../../../types";
 import { initiateTestingPlayers } from ".";
+import { emptyResources } from "../../../data";
+import { shuffleArray } from "../../general/shuffleArray/shuffleArray.general";
 
 describe("initiateTestingPlayers", () => {
   let result: RenderResult<[GameData, React.Dispatch<Action>]>;

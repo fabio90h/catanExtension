@@ -1,10 +1,8 @@
-import {
-  createChildImgElement,
-  createDivElement,
-  createPlayersAndProperties,
-} from "../../../../tests/utils";
 import { ResourceType } from "../../../../types";
 import keywords from "../../../keywords";
+import { createChildImgElement } from "../createChildImgElement/createChildImgElement.general";
+import { createDivElement } from "../createDivElement/createDivElement.general";
+import { createPlayersAndProperties } from "../createPlayersAndProperties/createPlayersAndProperties.general";
 import { parseResourceImage } from "./parseResourceImage.general";
 
 it("parse discardedSnippet resources images to array of resources", () => {

@@ -2,8 +2,10 @@ import { renderHook, RenderResult } from "@testing-library/react-hooks";
 import React from "react";
 import { act } from "react-dom/test-utils";
 import { Action, reducer } from "../../../reducer";
-import { shuffleArray, emptyResources } from "../../../tests/utils";
+
 import { GameData, ResourceType } from "../../../types";
+import { emptyResources } from "../../../utils/data";
+import { shuffleArray } from "../../../utils/helpers/general/shuffleArray/shuffleArray.general";
 import { givePlayersInitialResources } from "../../../utils/helpers/simulator/givePlayersInitialResources";
 import { giveResourcesToPlayer } from "../../../utils/helpers/simulator/giveResourcesToPlayer";
 import { initiateTestingPlayers } from "../../../utils/helpers/simulator/initiateTestingPlayers";

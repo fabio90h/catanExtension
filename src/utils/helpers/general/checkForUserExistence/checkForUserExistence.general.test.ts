@@ -1,5 +1,5 @@
-import { emptyResources } from "../../../../tests/utils";
 import { Users } from "../../../../types";
+import { emptyResources } from "../../../data";
 import { checkForUserExistence } from "./checkForUserExistence.general";
 
 const users: Users = {
