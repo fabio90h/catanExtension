@@ -24,7 +24,7 @@ import { Theft, ResourceType } from "../../../../types";
     ];
  * 
  * Lets say that Alex offered a BRICK then we know that kelvin did not
- * steal and BRICKs and we can eliminate that from the theft possibilities.
+ * steal BRICKs and we can eliminate that from the theft possibilities.
  * @param thefts 
  * @param victim 
  * @param knownResource 

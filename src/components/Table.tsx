@@ -1,9 +1,11 @@
 import React from "react";
 import { GameData, ResourceType, Theft as TheftType } from "../types";
-import { calculateTheftForPlayerAndResources, getImg } from "../utils/index.";
+
 import styled from "styled-components";
 import Theft from "./Theft";
 import { Action } from "../reducer";
+import { calculateTheftForPlayerAndResources } from "../utils/helpers/general/calculateTheftForPlayerAndResources/calculateTheftForPlayerAndResources.general";
+import { getImg } from "../utils/helpers/general/getImg/getImg.general";
 
 type Props = {
   gameData: GameData;

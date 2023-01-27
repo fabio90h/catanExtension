@@ -41,8 +41,8 @@ describe("Resolve unknown theft from proposal message", () => {
     // Define the players' role for this test
     [victim, stealer, stealer2] = shuffleArray(players);
   });
-  describe("2 dimensional [2 players] unknown steals", () => {
-    it("Resolves 1 layer theft when victim offers", () => {
+  describe("Victim gets single/double stolen from the same stealer", () => {
+    it("Resolves single theft when victim offers", () => {
       // Initialize resources and theft
       act(() =>
         givePlayersInitialResources(
@@ -114,7 +114,7 @@ describe("Resolve unknown theft from proposal message", () => {
         [ResourceType.BRICK]: 1,
       });
     });
-    it("Resolves 1 layer theft when stealer offers", () => {
+    it("Resolves single theft when stealer offers", () => {
       // Initialize resources and theft
       act(() =>
         givePlayersInitialResources(
@@ -186,7 +186,7 @@ describe("Resolve unknown theft from proposal message", () => {
         [ResourceType.BRICK]: 1,
       });
     });
-    it("Resolves 2 layer theft when victim offers", () => {
+    it("Resolves double thefts when victim offers", () => {
       // Initialize resources and theft
       act(() =>
         givePlayersInitialResources(
@@ -269,7 +269,7 @@ describe("Resolve unknown theft from proposal message", () => {
         [ResourceType.BRICK]: 1,
       });
     });
-    it("Resolves 2 layer theft when stealer offers", () => {
+    it("Resolves double thefts when stealer offers", () => {
       // Initialize resources and theft
       act(() =>
         givePlayersInitialResources(
@@ -493,7 +493,7 @@ describe("Resolve unknown theft from proposal message", () => {
           [ResourceType.STONE]: 0,
         });
 
-        // stealer offers a resource that had the possibility of being stolen
+        // stealer2 offers a resource that had the possibility of being stolen
         act(() =>
           offerProposal(
             result.current[1],

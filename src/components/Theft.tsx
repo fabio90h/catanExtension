@@ -1,9 +1,10 @@
 import React from "react";
-import { Action, ActionType } from "../reducer";
+import { Action } from "../reducer";
 import styled from "styled-components";
-import { ResourceType, Theft as TheftType, UnknownType, Users } from "../types";
-import { getImg, manuallyResolveUnknownTheft } from "../utils/index.";
+import { ResourceType, Theft as TheftType, Users } from "../types";
+import { manuallyResolveUnknownTheft } from "../utils/index.";
 import { TableBodyRow, TableImage } from "./Table";
+import { getImg } from "../utils/helpers/general/getImg/getImg.general";
 
 type Props = {
   theft: TheftType;

@@ -10,9 +10,15 @@ import {
 } from "./types";
 import { calculateTheftForPlayerAndResources } from "./utils/helpers/general/calculateTheftForPlayerAndResources/calculateTheftForPlayerAndResources.general";
 import { checkForUserExistence } from "./utils/helpers/general/checkForUserExistence/checkForUserExistence.general";
+import { createKeyForHash } from "./utils/helpers/general/createKeyForHash/createKeyForHash.general";
 import { createVictimHash } from "./utils/helpers/general/createVictimHash/createVictimHash.general";
 import { exchangeResourcesPure } from "./utils/helpers/general/exchangeResourcesPure/exchangeResourcesPure.general";
 import { reduceOtherThefts } from "./utils/helpers/general/reduceOtherThefts/reduceOtherThefts.general";
+import {
+  checkForOneResourceThefts,
+  doubleUnknownStealResolve,
+  hashCounter,
+} from "./utils/index.";
 
 export enum ActionType {
   PURCHASE = "PURCHASE",
@@ -308,186 +314,104 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
     }
     case ActionType.RESOLVE_UNKNOWN_STEAL_WITH_OFFERS: {
       if (state.thefts.length === 0) return state;
-      let thefts = [...state.thefts];
 
+      let thefts = [...state.thefts];
       let users: Users = { ...state.users };
       const offeringPlayer = action.payload.player; //can be stealer or victim
-
       // Construct a hash of offered resources. (e.g. { wood: 2 })
-      const offeredResourcesHash = action.payload.offeredResources.reduce(
-        (acc, curr) => {
-          acc[curr] = acc[curr] ? acc[curr] + 1 : 1;
-          return acc;
-        },
-        {} as Record<Partial<ResourceType>, number>
-      );
+      const offeredResourcesHash = hashCounter(action.payload.offeredResources);
 
-      (Object.keys(offeredResourcesHash) as Array<ResourceType>).forEach(
-        (offeredResource) => {
-          // How many does the player have in hand that we know for sure?
-          const resourceInHandCount =
-            users[offeringPlayer].resources[offeredResource];
+      // Go through every offered resource to see if we can resolve or reduce some unknown thefts
+      action.payload.offeredResources.forEach((offeredResource) => {
+        // How many does the player have in hand that we know for sure?
+        const resourceInHandCount =
+          users[offeringPlayer].resources[offeredResource];
 
-          // How many did he steal and got stolen from others?
-          const resourceTheftCount = calculateTheftForPlayerAndResources(
-            offeringPlayer,
-            offeredResource,
-            thefts
-          );
+        // How many did he steal and got stolen from others?
+        const resourceTheftCount = calculateTheftForPlayerAndResources(
+          offeringPlayer,
+          offeredResource,
+          thefts
+        );
 
-          // Offering what he does not have! (TESTED) [STEALER]
-          if (resourceInHandCount < offeredResourcesHash[offeredResource]) {
-            // Did the player get this from something he stole?
-            if (
-              offeredResourcesHash[offeredResource] - resourceInHandCount <=
-              resourceTheftCount
-            ) {
-              // Find the theft and eliminate it since we figured out what was stolen
-              for (let i = 0; i < thefts.length; i++) {
-                if (
-                  thefts[i].who.stealer === offeringPlayer &&
-                  !!thefts[i].what[offeredResource]
-                ) {
-                  // Update the resources
-                  users = exchangeResourcesPure(
-                    users,
-                    thefts[i].who.victim,
-                    offeringPlayer,
-                    [offeredResource] as ResourceType[]
-                  );
-                  thefts = reduceOtherThefts(
-                    thefts,
-                    thefts[i].who.victim,
-                    offeredResource
-                  );
-                  // Resolve theft
-                  thefts.splice(i, 1);
-                }
-              }
-            }
-          }
-          // Offering what we thought was stolen (TESTED) [VICTIM]
-          else if (
-            offeredResourcesHash[offeredResource] >
-            resourceInHandCount + resourceTheftCount
+        /**
+         * Offering what he does not have! [STEALER]
+         *
+         * This is where there is no stolen possibility reduction. We will solve the theft
+         * mystery since the stealer did not have this resource prior to the steals.
+         *
+         */
+        if (resourceInHandCount < offeredResourcesHash[offeredResource]) {
+          // Did the player get this from something he stole?
+          if (
+            offeredResourcesHash[offeredResource] - resourceInHandCount <=
+            resourceTheftCount
           ) {
-            console.log(
-              "offeredResource",
-              offeredResource,
-              "resourceTheftCount",
-              resourceTheftCount,
-              "resourceInHandCount",
-              resourceInHandCount
-            );
-
-            // Parse through theft
-            for (let i = 0; i < thefts.length; i++) {
-              const wasResourceOfferedPossiblyStolen =
-                !!thefts[i].what[offeredResource];
-
-              const isOfferingPlayerVictim =
-                thefts[i].who.victim === offeringPlayer;
-
-              /**
-               * This is the case where the victim that got stolen is offering something.
-               */
-              if (isOfferingPlayerVictim && wasResourceOfferedPossiblyStolen) {
-                // Reduced the steal possibilities
-                delete thefts[i].what[offeredResource];
-
-                console.log(
-                  "Theft possibilities reduced!",
-                  thefts[i],
+            // Find the theft and eliminate it since we figured out what was stolen
+            thefts.forEach((theft, i) => {
+              if (
+                theft.who.stealer === offeringPlayer &&
+                !!theft.what[offeredResource]
+              ) {
+                // Update the resources
+                users = exchangeResourcesPure(
+                  users,
+                  theft.who.victim,
+                  offeringPlayer,
+                  [offeredResource] as ResourceType[]
+                );
+                // Since we solved a theft for one. There is opportunity
+                // to reduce the theft possibilities for others
+                thefts = reduceOtherThefts(
+                  thefts,
+                  theft.who.victim,
                   offeredResource
                 );
+                // Resolve theft
+                thefts.splice(i, 1);
               }
-            }
+            });
+          }
+        } else if (
+          /**
+           * Offering what we thought was stolen [VICTIM]
+           *
+           * We reduce the possible resource that was stolen
+           */
+          offeredResourcesHash[offeredResource] >
+          resourceInHandCount + resourceTheftCount
+        ) {
+          // Go through each theft to see if we can reduce some theft possibilities
+          thefts.forEach((theft) => {
+            const wasResourceOfferedPossiblyStolen =
+              !!theft.what[offeredResource];
+
+            const isOfferingPlayerVictim = theft.who.victim === offeringPlayer;
 
             /**
-             * If the number of thefts for a specific victim is the same amount of possible resource that can be
-             * stolen then it is safe to assume that those were the resources stolen.
-             *
-             * For example:
-             *  [
-             *    {"what": {"SHEEP": 1, "STONE": 1}, "who": {"stealer": "Gali", "victim": "Alex"}},
-             *    {"what": {"SHEEP": 1, "STONE": 1}, "who": {"stealer": "Kelvin", "victim": "Alex"}}
-             *  ]
-             * Here we see that Alex was a victim twice. We can also see that he only has 2 possible resources to
-             * be stolen from. Thus it is safe to conclude that what was stolen was the SHEEP and the STONE. However, we
-             * just wont know where that stolen resource end up. If the stealer is the same then we know that both were sent
-             * to the stealer
-             *
+             * This is the case where the victim that got stolen is offering something.
              */
-            const victimHash = createVictimHash(thefts);
-            const alreadyDeleted = {};
-            for (let i = 0; i < thefts.length; i++) {
-              const players = `${thefts[i].who.victim}_${thefts[i].who.stealer}`;
-              const possibleResourceStolen = Object.keys(thefts[i].what).join(
-                "_"
-              );
-              const key = `${players}:${possibleResourceStolen}`;
+            if (isOfferingPlayerVictim && wasResourceOfferedPossiblyStolen) {
+              // Reduced the steal possibilities
+              delete theft.what[offeredResource];
 
-              if (
-                victimHash[key].reoccurrence === victimHash[key].resourceAmount
-              ) {
-                if (!alreadyDeleted[key]) {
-                  // Update the resources
-                  users = exchangeResourcesPure(
-                    users,
-                    thefts[i].who.victim,
-                    thefts[i].who.stealer,
-                    Object.keys(thefts[i].what) as ResourceType[]
-                  );
-                  console.log(
-                    "Exchange was executed",
-                    Object.keys(thefts[i].what),
-                    key
-                  );
-                } else {
-                  console.log("Was already exchanged", alreadyDeleted, key);
-                }
-                thefts.splice(i, 1);
-                i--;
-                console.log(
-                  "Theft solved because the amount of steals matched the possible resources that can be stolen!"
-                );
-                alreadyDeleted[key] = 1;
-              }
+              console.log(
+                "Theft possibilities reduced!",
+                theft,
+                offeredResource
+              );
             }
-          }
+          });
+
+          [thefts, users] = doubleUnknownStealResolve(thefts, users);
         }
-      );
+      });
 
       // Check that there is no one resources possibility such as
       // [{what: {WOOD: 1}, who: {stealer: Gali, victim: kelvin}}]
-      for (let x = 0; x < thefts.length; x++) {
-        const remainingResourcePossibilities = Object.keys(
-          thefts[x].what
-        ) as ResourceType[];
+      [thefts, users] = checkForOneResourceThefts(thefts, users);
 
-        if (
-          remainingResourcePossibilities.length === 1 &&
-          thefts[x].what[Object.keys(thefts[x].what)[0]] === 1
-        ) {
-          /**
-           * After the steal possibilities are reduced, if the remaining possibility is 1 then we
-           * know what was stolen.
-           */
-          if (remainingResourcePossibilities.length === 1) {
-            users = exchangeResourcesPure(
-              users,
-              thefts[x].who.victim,
-              thefts[x].who.stealer,
-              remainingResourcePossibilities
-            );
-            // Resolve theft
-            thefts.splice(x, 1);
-            console.log("Theft solved!", remainingResourcePossibilities);
-          }
-        }
-      }
-
-      return { users, thefts };
+      return { thefts, users };
     }
     case ActionType.UNKNOWN_STEAL: {
       checkForUserExistence(action.payload.victim, state.users);
@@ -602,7 +526,7 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
      * ### This should be executed when:
      * - Victim makes an offer, buys, stole or is stolen from.
      * - Stealer makes an offer or buys, stole or is stolen from.
-     * - Monoply card is played
+     * - Monopoly card is played
      */
     case ActionType.REVIEW_STEALS: {
       if (state.thefts.length === 0) return state;
