@@ -1,5 +1,5 @@
 import { Action, ActionType } from "../reducer";
-import { ResourceType, Theft, Users } from "../types";
+import { ResourceType, Theft, UserResources, Users } from "../types";
 import { createVictimHash } from "./helpers/general/createVictimHash/createVictimHash.general";
 import { exchangeResourcesPure } from "./helpers/general/exchangeResourcesPure/exchangeResourcesPure.general";
 
@@ -94,7 +94,6 @@ export const doubleUnknownStealResolve = (
     const players = `${thefts[i].who.victim}_${thefts[i].who.stealer}`;
     const possibleResourceStolen = Object.keys(thefts[i].what).join("_");
     const key = `${players}:${possibleResourceStolen}`;
-
     if (victimHash[key].reoccurrence === victimHash[key].resourceAmount) {
       if (!alreadyDeleted[key]) {
         // Update the resources
