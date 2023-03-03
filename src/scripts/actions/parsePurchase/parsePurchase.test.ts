@@ -12,6 +12,7 @@ import { giveResourcesToPlayer } from "../../../utils/helpers/simulator/giveReso
 import { initiateTestingPlayers } from "../../../utils/helpers/simulator/initiateTestingPlayers";
 import { playerMakesPurchase } from "../../../utils/helpers/simulator/playerMakesPurchase";
 import { unknownSteal } from "../../../utils/helpers/simulator/unknownSteal";
+import keywords from "../../../utils/keywords";
 
 describe("Spending resources works as expected", () => {
   let result: RenderResult<[GameData, React.Dispatch<Action>]>;
@@ -24,6 +25,7 @@ describe("Spending resources works as expected", () => {
     // Create the store
     const { result: hookResult } = renderHook(() =>
       React.useReducer(reducer, {
+        username: keywords.userName,
         users: {},
         thefts: [],
       })

@@ -24,6 +24,7 @@ describe("Stole from or by you", () => {
     // Reducer data setup
     const { result: hookResult } = renderHook(() =>
       React.useReducer(reducer, {
+        username: keywords.userName,
         users: {},
         thefts: [],
       })
@@ -35,7 +36,7 @@ describe("Stole from or by you", () => {
     const players = Object.keys(result.current[0].users);
     const shuffledPlayers = shuffleArray(players);
     [player, stealerName] = shuffledPlayers.filter(
-      (player) => player !== keywords.userName
+      (player) => player !== result.current[0].username
     );
   });
   it("You steal from others", () => {
@@ -56,7 +57,9 @@ describe("Stole from or by you", () => {
         true
       )
     );
-    expect(result.current[0].users[keywords.userName].resources).toStrictEqual({
+    expect(
+      result.current[0].users[result.current[0].username].resources
+    ).toStrictEqual({
       [ResourceType.WOOD]: 0,
       [ResourceType.WHEAT]: 1,
       [ResourceType.BRICK]: 0,
@@ -76,9 +79,9 @@ describe("Stole from or by you", () => {
     act(() => {
       giveResourcesToPlayer(
         result.current[1],
-        keywords.userName,
+        result.current[0].username,
         [ResourceType.SHEEP, ResourceType.STONE, ResourceType.WHEAT],
-        result.current[0].users[keywords.userName].config.color
+        result.current[0].users[result.current[0].username].config.color
       );
     });
     act(() =>
@@ -97,7 +100,9 @@ describe("Stole from or by you", () => {
       [ResourceType.STONE]: 0,
     });
     // Victim
-    expect(result.current[0].users[keywords.userName].resources).toStrictEqual({
+    expect(
+      result.current[0].users[result.current[0].username].resources
+    ).toStrictEqual({
       [ResourceType.WOOD]: 0,
       [ResourceType.WHEAT]: 1,
       [ResourceType.BRICK]: 0,

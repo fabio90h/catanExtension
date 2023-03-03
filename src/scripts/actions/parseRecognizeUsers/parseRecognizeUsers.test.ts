@@ -12,6 +12,7 @@ import { parseRecognizeUsers } from "./parseRecognizeUsers.actions";
 
 const { result: hookResult } = renderHook(() =>
   React.useReducer(reducer, {
+    username: keywords.userName,
     users: {},
     thefts: [],
   })

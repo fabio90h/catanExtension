@@ -6,6 +6,7 @@ import Theft from "./Theft";
 import { Action } from "../reducer";
 import { calculateTheftForPlayerAndResources } from "../utils/helpers/general/calculateTheftForPlayerAndResources/calculateTheftForPlayerAndResources.general";
 import { getImg } from "../utils/helpers/general/getImg/getImg.general";
+import { Username } from "./Username";
 
 type Props = {
   gameData: GameData;
@@ -93,11 +94,15 @@ const mockTable: TheftType = {
 
 const Table: React.FC<Props> = (props) => {
   const {
-    gameData: { users, thefts },
+    gameData: { users, thefts, username },
     dispatch,
   } = props;
 
   React.useEffect(() => console.log("thefts", thefts), [thefts]);
+
+  if(!username){
+    return <Username dispatch={dispatch} />
+  }
 
   return (
     <TableContainer>

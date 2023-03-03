@@ -5,6 +5,7 @@ import { Action, reducer } from "../../../../reducer";
 
 import { GameData, ResourceType } from "../../../../types";
 import { emptyResources } from "../../../data";
+import keywords from "../../../keywords";
 import { givePlayersInitialResources } from "../../simulator/givePlayersInitialResources";
 import { initiateTestingPlayers } from "../../simulator/initiateTestingPlayers";
 import { shuffleArray } from "../shuffleArray/shuffleArray.general";
@@ -21,6 +22,7 @@ describe("exchangeResources", () => {
     // Reducer data setup
     const { result: hookResult } = renderHook(() =>
       React.useReducer(reducer, {
+        username: keywords.userName,
         users: {},
         thefts: [],
       })

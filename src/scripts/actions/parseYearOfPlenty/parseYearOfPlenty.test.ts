@@ -8,6 +8,7 @@ import { shuffleArray } from "../../../utils/helpers/general/shuffleArray/shuffl
 import { giveResourcesToPlayer } from "../../../utils/helpers/simulator/giveResourcesToPlayer";
 import { initiateTestingPlayers } from "../../../utils/helpers/simulator/initiateTestingPlayers";
 import { yearOfPlenty } from "../../../utils/helpers/simulator/yearOfPlenty";
+import keywords from "../../../utils/keywords";
 
 it("Successfully executes 'Year of Plenty", () => {
   let result: RenderResult<[GameData, React.Dispatch<Action>]>;
@@ -15,6 +16,7 @@ it("Successfully executes 'Year of Plenty", () => {
   // Reducer data setup
   const { result: hookResult } = renderHook(() =>
     React.useReducer(reducer, {
+      username: keywords.userName,
       users: {},
       thefts: [],
     })

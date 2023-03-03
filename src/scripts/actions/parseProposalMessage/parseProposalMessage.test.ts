@@ -24,6 +24,7 @@ describe("Resolve unknown theft from proposal message", () => {
     // Reducer data setup
     const { result: hookResult } = renderHook(() =>
       React.useReducer(reducer, {
+        username: keywords.userName,
         users: {},
         thefts: [],
       })
@@ -35,7 +36,7 @@ describe("Resolve unknown theft from proposal message", () => {
 
     // Picking a random player
     const players = Object.keys(result.current[0].users).filter(
-      (player) => player !== keywords.userName
+      (player) => player !== result.current[0].username
     );
 
     // Define the players' role for this test

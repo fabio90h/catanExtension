@@ -6,6 +6,7 @@ import { GameData } from "../../../../types";
 import { initiateTestingPlayers } from ".";
 import { emptyResources } from "../../../data";
 import { shuffleArray } from "../../general/shuffleArray/shuffleArray.general";
+import keywords from "../../../keywords";
 
 describe("initiateTestingPlayers", () => {
   let result: RenderResult<[GameData, React.Dispatch<Action>]>;
@@ -17,6 +18,8 @@ describe("initiateTestingPlayers", () => {
     // Reducer data setup
     const { result: hookResult } = renderHook(() =>
       React.useReducer(reducer, {
+        username: keywords.userName,
+
         users: {},
         thefts: [],
       })

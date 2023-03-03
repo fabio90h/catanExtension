@@ -19,6 +19,7 @@ import {
 } from "./utils/index.";
 
 export enum ActionType {
+  SET_USERNAME = "SET_USERNAME",
   PURCHASE = "PURCHASE",
   ADD_RESOURCES = "ADD_RESOURCES",
   SUBTRACT_RESOURCES = "SUBTRACT_RESOURCES",
@@ -32,6 +33,12 @@ export enum ActionType {
 }
 
 export type Action =
+  | {
+      type: ActionType.SET_USERNAME;
+      payload: {
+        username: string;
+      };
+    }
   | {
       type: ActionType.INITIALIZE_USER;
       payload: {
@@ -97,6 +104,12 @@ export type Action =
 
 export const reducer: React.Reducer<GameData, Action> = (state, action) => {
   switch (action.type) {
+    case ActionType.SET_USERNAME: {
+      return {
+        ...state,
+        username: action.payload.username,
+      };
+    }
     case ActionType.INITIALIZE_USER: {
       const users: Users = { ...state.users };
 
@@ -303,6 +316,7 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
         action.payload.stoleAmount;
 
       return {
+        ...state,
         thefts,
         users,
       };
@@ -314,6 +328,7 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
       thefts.splice(action.payload.id, 1);
 
       return {
+        ...state,
         users,
         thefts,
       };
@@ -416,7 +431,7 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
       // [{what: {WOOD: 1}, who: {stealer: Gali, victim: kelvin}}]
       [thefts, users] = checkForOneResourceThefts(thefts, users);
 
-      return { thefts, users };
+      return { ...state, thefts, users };
     }
     case ActionType.UNKNOWN_STEAL: {
       checkForUserExistence(action.payload.victim, state.users);
@@ -488,7 +503,7 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
       //One or nothing thing can be stolen
       if (victimResourcesCount === 0 && indexOfStealerBeingVictim >= 0) {
         thefts[indexOfStealerBeingVictim] = theft;
-        return { users, thefts };
+        return { ...state, users, thefts };
       } else if (possibleResourceStolenArray.length <= 1) {
         console.log("less than or equal to one");
         possibleResourceStolenArray.forEach((resource) => {
@@ -515,6 +530,7 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
         console.log("more than one");
         //Set prompt to pick resource or unknown
         return {
+          ...state,
           users,
           thefts: [...thefts, theft],
         };
@@ -668,7 +684,7 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
       //   }
       // }
 
-      return { users, thefts };
+      return { ...state, users, thefts };
     }
     case ActionType.REVIEW_STEALS_WITH_ACTION: {
       if (state.thefts.length === 0) return state;
@@ -779,7 +795,7 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
       // [{what: {WOOD: 1}, who: {stealer: Gali, victim: kelvin}}]
       [thefts, users] = checkForOneResourceThefts(thefts, users);
 
-      return { thefts, users };
+      return { ...state, thefts, users };
     }
     default:
       return state;
