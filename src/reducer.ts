@@ -30,6 +30,7 @@ export enum ActionType {
   RESOLVE_UNKNOWN_STEAL_WITH_OFFERS = "RESOLVE_UNKNOWN_STEAL_WITH_OFFERS",
   REVIEW_STEALS = "REVIEW_STEALS",
   REVIEW_STEALS_WITH_ACTION = "REVIEW_STEALS_WITH_ACTION",
+  STOLE_FROM_YOU = "STOLE_FROM_YOU",
 }
 
 export type Action =
@@ -49,11 +50,15 @@ export type Action =
     }
   | {
       type: ActionType.ADD_RESOURCES;
-      payload: { user: string; addResources: ResourceType[] };
+      payload: { user: string; addResources: ResourceType[]; isUser?: Boolean };
     }
   | {
       type: ActionType.SUBTRACT_RESOURCES;
-      payload: { user: string; subtractResources: ResourceType[] };
+      payload: {
+        user: string;
+        subtractResources: ResourceType[];
+        isUser?: Boolean;
+      };
     }
   | {
       type: ActionType.PURCHASE;
@@ -112,7 +117,7 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
     }
     case ActionType.INITIALIZE_USER: {
       const users: Users = { ...state.users };
-
+      console.log("INITIALIZE_USER", state.username);
       const resources: UserResources = {
         [ResourceType.WOOD]: 0,
         [ResourceType.SHEEP]: 0,
@@ -135,12 +140,15 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
       };
     }
     case ActionType.ADD_RESOURCES: {
-      checkForUserExistence(action.payload.user, state.users);
       const users: Users = { ...state.users };
+      const user = action.payload.isUser ? state.username : action.payload.user;
+
+      checkForUserExistence(user, state.users);
       const tempResources: UserResources = {
-        ...users[action.payload.user].resources,
+        ...users[user].resources,
       };
-      const tempConfig: UserConfig = { ...users[action.payload.user].config };
+      console.log("testerFH_ADD_RESOURCES", user);
+      const tempConfig: UserConfig = { ...users[user].config };
 
       action.payload.addResources.forEach(
         (resource) => (tempResources[resource] += 1)
@@ -150,7 +158,7 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
         ...state,
         users: {
           ...users,
-          [action.payload.user]: {
+          [user]: {
             resources: tempResources,
             config: tempConfig,
           },
@@ -158,13 +166,17 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
       };
     }
     case ActionType.SUBTRACT_RESOURCES: {
-      checkForUserExistence(action.payload.user, state.users);
+      console.log("SUBTRACT_RESOURCES", state.username);
       const users: Users = { ...state.users };
 
+      const user = action.payload.isUser ? state.username : action.payload.user;
+      checkForUserExistence(user, state.users);
+      console.log("testerFH_SUBTRACT_RESOURCES", user);
+
       const tempResources: UserResources = {
-        ...users[action.payload.user].resources,
+        ...users[user].resources,
       };
-      const tempConfig: UserConfig = { ...users[action.payload.user].config };
+      const tempConfig: UserConfig = { ...users[user].config };
 
       action.payload.subtractResources.forEach(
         (resource) => (tempResources[resource] -= 1)
@@ -174,7 +186,7 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
         ...state,
         users: {
           ...users,
-          [action.payload.user]: {
+          [user]: {
             resources: tempResources,
             config: tempConfig,
           },
@@ -182,6 +194,7 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
       };
     }
     case ActionType.PURCHASE: {
+      console.log("PURCHASE", state.username);
       checkForUserExistence(action.payload.user, state.users);
       const users: Users = { ...state.users };
 
@@ -228,6 +241,7 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
       };
     }
     case ActionType.STEAL_ALL: {
+      console.log("STEAL_ALL", state.username);
       checkForUserExistence(action.payload.user, state.users);
       let users: Users = { ...state.users };
       let thefts: Theft[] = [...state.thefts];
@@ -322,6 +336,7 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
       };
     }
     case ActionType.RESOLVE_UNKNOWN_STEAL: {
+      console.log("RESOLVE_UNKNOWN_STEAL", state.username);
       const thefts = [...state.thefts];
       const users: Users = { ...state.users };
 
@@ -334,6 +349,7 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
       };
     }
     case ActionType.RESOLVE_UNKNOWN_STEAL_WITH_OFFERS: {
+      console.log("RESOLVE_UNKNOWN_STEAL_WITH_OFFERS", state.username);
       if (state.thefts.length === 0) return state;
 
       let thefts = [...state.thefts];
@@ -434,6 +450,7 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
       return { ...state, thefts, users };
     }
     case ActionType.UNKNOWN_STEAL: {
+      console.log("UNKNOWN_STEAL", state.username);
       checkForUserExistence(action.payload.victim, state.users);
       checkForUserExistence(action.payload.stealer, state.users);
 
@@ -552,11 +569,13 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
      * - Monopoly card is played
      */
     case ActionType.REVIEW_STEALS: {
+      console.log("REVIEW_STEALS", state.username);
       if (state.thefts.length === 0) return state;
       let users: Users = { ...state.users };
       let thefts = [...state.thefts];
 
-      const player = action.payload.player;
+      let player = action.payload.player;
+      console.log("testerFH_REVIEW_STEALS", player);
 
       // PURCHASE
       for (const resource in ResourceType) {
@@ -687,6 +706,7 @@ export const reducer: React.Reducer<GameData, Action> = (state, action) => {
       return { ...state, users, thefts };
     }
     case ActionType.REVIEW_STEALS_WITH_ACTION: {
+      console.log("REVIEW_STEALS_WITH_ACTION", state.username);
       if (state.thefts.length === 0) return state;
 
       let thefts = [...state.thefts];

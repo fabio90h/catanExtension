@@ -1,5 +1,5 @@
 import React from 'react'
-import { Action, ActionType } from '../reducer';
+import { Action } from '../reducer';
 import { setUsername as dispatchUsername } from '../scripts/actions/setUsername/setUsername.action';
 
 type Props = {
@@ -15,6 +15,6 @@ export const Username: React.FC<Props> = ({dispatch}) => {
 
     return <div>
         <input value={username} onChange={(e) => setUsername(e.target.value)}/>
-        <button onClick={handleOnSubmit}>Submit</button>
+        <div><button onClick={handleOnSubmit}>Submit</button></div>
     </div>
 }

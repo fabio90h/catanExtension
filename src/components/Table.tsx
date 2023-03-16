@@ -6,7 +6,7 @@ import Theft from "./Theft";
 import { Action } from "../reducer";
 import { calculateTheftForPlayerAndResources } from "../utils/helpers/general/calculateTheftForPlayerAndResources/calculateTheftForPlayerAndResources.general";
 import { getImg } from "../utils/helpers/general/getImg/getImg.general";
-import { Username } from "./Username";
+import { setUsername } from "../scripts/actions/setUsername/setUsername.action";
 
 type Props = {
   gameData: GameData;
@@ -41,15 +41,19 @@ const TablePlayerHeader = styled.th`
 `;
 
 // BODY
-export const TableBodyRow = styled.tr`
+export const TableBodyRow = styled.tr<{ isUsernameSet: boolean; isUser: boolean }>`
   border: none;
   height: 3em;
   &:nth-child(2n-1) {
-    background-color: #eeeeee;
+    background-color: ${(props) => props.isUser ? '#A8E3E6' : '#eeeeee'};
   }
   &:nth-child(2n) {
-    background-color: #f9f9f9;
+    background-color: ${(props) => props.isUser ? '#A8E3E6' : '#f9f9f9'};
   }
+  &:hover {
+    background-color: ${(props) => !props.isUsernameSet ? '#A8E3E6' : null};
+    cursor: ${(props) => !props.isUsernameSet  ? 'pointer' : null};
+  };
 `;
 const TablePlayerBodyCell = styled.td`
   border: none;
@@ -98,70 +102,70 @@ const Table: React.FC<Props> = (props) => {
     dispatch,
   } = props;
 
-  React.useEffect(() => console.log("thefts", thefts), [thefts]);
-
-  if(!username){
-    return <Username dispatch={dispatch} />
-  }
-
   return (
     <TableContainer>
+     {
+      <>
       {/* HEADER */}
       <TableHeader>
-        <tr>
-          <TablePlayerHeader>Name</TablePlayerHeader>
-          {tableHeaders.map((header) => (
-            <TableBodyCell>
-              <TableImage src={getImg(header)} />
-            </TableBodyCell>
-          ))}
-        </tr>
-      </TableHeader>
-      {/* BODY */}
-      <tbody>
-        {Object.keys(users).map((user) => {
-          return (
-            <TableBodyRow>
-              {/* USER NAME AND COLOR */}
-              <TablePlayerBodyCell>
-                <TablePlayerBodyCellColor color={users[user].config.color} />
-                <TablePlayerName color={users[user].config.color}>
-                  {user}
-                </TablePlayerName>
-              </TablePlayerBodyCell>
-              {/* COUNT WITH POSSIBLE THEFT*/}
-              {tableHeaders.map((header) => {
-                const theftCount = calculateTheftForPlayerAndResources(
-                  user,
-                  header,
-                  thefts
-                );
-                const resourceCount = users[user].resources[header];
-                return (
-                  <TableBodyCell>
-                    {resourceCount}
-                    {theftCount !== 0 && ` (${resourceCount + theftCount})`}
-                  </TableBodyCell>
-                );
-              })}
-            </TableBodyRow>
-          );
-        })}
-      </tbody>
-      {/* List of thefts */}
-      <tbody style={{ border: "3px solid red" }}>
-        {thefts.map((theft, id) => {
-          return (
-            <Theft
-              key={id}
-              id={id}
-              theft={theft}
-              users={users}
-              dispatch={dispatch}
-            />
-          );
-        })}
-      </tbody>
+       <tr>
+         <TablePlayerHeader>Name</TablePlayerHeader>
+         {tableHeaders.map((header) => (
+           <TableBodyCell>
+             <TableImage src={getImg(header)} />
+           </TableBodyCell>
+         ))}
+       </tr>
+     </TableHeader>
+     {/* BODY */}
+     <tbody>
+       {Object.keys(users).map((user) => {
+         return (
+           <TableBodyRow isUsernameSet={!!username} isUser={user === username} onClick={() => {
+            !username && setUsername(user, dispatch)
+        }}>
+             {/* USER NAME AND COLOR */}
+             <TablePlayerBodyCell>
+               <TablePlayerBodyCellColor color={users[user].config.color} />
+               <TablePlayerName color={users[user].config.color}>
+                 {user}
+               </TablePlayerName>
+             </TablePlayerBodyCell>
+             {/* COUNT WITH POSSIBLE THEFT*/}
+             {tableHeaders.map((header) => {
+               const theftCount = calculateTheftForPlayerAndResources(
+                 user,
+                 header,
+                 thefts
+               );
+               const resourceCount = users[user].resources[header];
+               return (
+                 <TableBodyCell>
+                   {resourceCount}
+                   {theftCount !== 0 && ` (${resourceCount + theftCount})`}
+                 </TableBodyCell>
+               );
+             })}
+           </TableBodyRow>
+         );
+       })}
+     </tbody>
+     {/* List of thefts */}
+     <tbody style={{ border: "3px solid red" }}>
+       {thefts.map((theft, id) => {
+         return (
+           <Theft
+             key={id}
+             id={id}
+             theft={theft}
+             users={users}
+             dispatch={dispatch}
+           />
+         );
+       })}
+     </tbody>
+     </>
+     }
     </TableContainer>
   );
 };

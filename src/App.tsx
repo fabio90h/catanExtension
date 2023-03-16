@@ -15,10 +15,6 @@ function App() {
     findTranscription(dispatch);
   }, []);
 
-  React.useEffect(() => {
-    console.log("gameData", gameData);
-  }, []);
-
   return (
     <div>
       <Table gameData={gameData} dispatch={dispatch} />
