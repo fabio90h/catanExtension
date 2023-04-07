@@ -83,10 +83,6 @@ const Theft: React.FC<Props> = (props) => {
                 <TableImage src={getImg(resource as ResourceType)} />
               </a>
             ))}
-            {/* MIGHT NOT BE NECESSARY */}
-            {/* <a onClick={handleUnknownResourceClick}>
-              <TableImage src={getImg(UnknownType.UNKOWN)} />
-            </a> */}
           </ImageContainer>
         </th>
       </TableBodyRow>
