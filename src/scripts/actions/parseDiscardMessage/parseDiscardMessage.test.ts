@@ -11,6 +11,7 @@ import { givePlayersInitialResources } from "../../../utils/helpers/simulator/gi
 import { giveResourcesToPlayer } from "../../../utils/helpers/simulator/giveResourcesToPlayer";
 import { initiateTestingPlayers } from "../../../utils/helpers/simulator/initiateTestingPlayers";
 import { unknownSteal } from "../../../utils/helpers/simulator/unknownSteal";
+import keywords from "../../../utils/keywords";
 
 describe("Discard cards", () => {
   let playerDiscarding: string;
@@ -21,6 +22,7 @@ describe("Discard cards", () => {
     // Reducer data setup
     const { result: hookResult } = renderHook(() =>
       React.useReducer(reducer, {
+        username: keywords.userName,
         users: {},
         thefts: [],
       })

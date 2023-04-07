@@ -28,7 +28,7 @@ export type UserConfig = { color: string };
 export type Users = Record<string, UserProperties>;
 export type ImageType = PurchaseType | ResourceType | UnknownType;
 
-export type GameData = { users: Users; thefts: Theft[] };
+export type GameData = { username: string; users: Users; thefts: Theft[] };
 
 export type Victim = {
   resourceAmount: number;

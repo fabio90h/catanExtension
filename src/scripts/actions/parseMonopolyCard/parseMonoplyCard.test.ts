@@ -12,6 +12,7 @@ import { giveResourcesToPlayer } from "../../../utils/helpers/simulator/giveReso
 import { initiateTestingPlayers } from "../../../utils/helpers/simulator/initiateTestingPlayers";
 import { monopoly } from "../../../utils/helpers/simulator/monopoly";
 import { unknownSteal } from "../../../utils/helpers/simulator/unknownSteal";
+import keywords from "../../../utils/keywords";
 
 describe("Monopoly card steals all resources from all players", () => {
   let result: RenderResult<[GameData, React.Dispatch<Action>]>;
@@ -26,6 +27,7 @@ describe("Monopoly card steals all resources from all players", () => {
     // Reducer data setup
     const { result: hookResult } = renderHook(() =>
       React.useReducer(reducer, {
+        username: keywords.userName,
         users: {},
         thefts: [],
       })

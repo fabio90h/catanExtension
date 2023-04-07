@@ -18,24 +18,33 @@ export const parseStoleFromYouMessage = (
     let stealer = nodeTextArray[0];
     let victim = nodeTextArray[nodeTextArray.length - 1];
 
-    // Substitute "You" for username
-    if (stealer === "You") stealer = keywords.userName;
-    else victim = keywords.userName;
+    let isUserAStealer = false;
+    if (stealer.toLocaleLowerCase() === "you") isUserAStealer = true;
 
     const stolenResource = parseResourceImage(node);
     dispatch({
       type: ActionType.ADD_RESOURCES,
-      payload: { user: stealer, addResources: stolenResource },
+      payload: {
+        user: stealer,
+        addResources: stolenResource,
+        isUser: isUserAStealer,
+      },
     });
     dispatch({
       type: ActionType.SUBTRACT_RESOURCES,
-      payload: { user: victim, subtractResources: stolenResource },
+      payload: {
+        user: victim,
+        subtractResources: stolenResource,
+        isUser: !isUserAStealer,
+      },
     });
 
     //Review steals
     dispatch({
       type: ActionType.REVIEW_STEALS,
-      payload: { player: stealer === keywords.userName ? victim : stealer },
+      payload: {
+        player: stealer.toLocaleLowerCase() === "you" ? victim : stealer,
+      },
     });
   }
 };

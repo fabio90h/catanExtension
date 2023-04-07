@@ -8,6 +8,7 @@ import { shuffleArray } from "../../../utils/helpers/general/shuffleArray/shuffl
 import { givePlayersInitialResources } from "../../../utils/helpers/simulator/givePlayersInitialResources";
 import { initiateTestingPlayers } from "../../../utils/helpers/simulator/initiateTestingPlayers";
 import { unknownSteal } from "../../../utils/helpers/simulator/unknownSteal";
+import keywords from "../../../utils/keywords";
 import { manuallyResolveUnknownTheft } from "./manuallyResolveUnknownTheft.action";
 
 describe("Manually resolving theft", () => {
@@ -20,6 +21,7 @@ describe("Manually resolving theft", () => {
     // Reducer data setup
     const { result: hookResult } = renderHook(() =>
       React.useReducer(reducer, {
+        username: keywords.userName,
         users: {},
         thefts: [],
       })

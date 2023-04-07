@@ -6,16 +6,13 @@ import { findTranscription } from "./scripts";
 
 function App() {
   const [gameData, dispatch] = React.useReducer(reducer, {
+    username: "",
     users: {},
     thefts: [],
   });
 
   React.useEffect(() => {
     findTranscription(dispatch);
-  }, []);
-
-  React.useEffect(() => {
-    console.log("gameData", gameData);
   }, []);
 
   return (

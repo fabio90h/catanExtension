@@ -10,6 +10,7 @@ import { givePlayersInitialResources } from "../../../utils/helpers/simulator/gi
 import { giveResourcesToPlayer } from "../../../utils/helpers/simulator/giveResourcesToPlayer";
 import { initiateTestingPlayers } from "../../../utils/helpers/simulator/initiateTestingPlayers";
 import { unknownSteal } from "../../../utils/helpers/simulator/unknownSteal";
+import keywords from "../../../utils/keywords";
 
 describe("trading with bank", () => {
   let result: RenderResult<[GameData, React.Dispatch<Action>]>;
@@ -22,6 +23,7 @@ describe("trading with bank", () => {
     // Reducer data setup
     const { result: hookResult } = renderHook(() =>
       React.useReducer(reducer, {
+        username: keywords.userName,
         users: {},
         thefts: [],
       })

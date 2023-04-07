@@ -22,6 +22,7 @@ describe("Unknown steals", () => {
     // Reducer data setup
     const { result: hookResult } = renderHook(() =>
       React.useReducer(reducer, {
+        username: keywords.userName,
         users: {},
         thefts: [],
       })
@@ -31,7 +32,7 @@ describe("Unknown steals", () => {
     act(() => initiateTestingPlayers(result.current[1], true));
     // Picking a random player
     const players = Object.keys(result.current[0].users).filter(
-      (player) => player !== keywords.userName
+      (player) => player !== result.current[0].username
     );
     [victim, stealer, victimOfVictim] = shuffleArray(players);
   });

@@ -9,10 +9,12 @@ import { shuffleArray } from "../../../utils/helpers/general/shuffleArray/shuffl
 
 import { giveResourcesToPlayer } from "../../../utils/helpers/simulator/giveResourcesToPlayer";
 import { initiateTestingPlayers } from "../../../utils/helpers/simulator/initiateTestingPlayers";
+import keywords from "../../../utils/keywords";
 
 it("Adds resources when 'got' message appears", () => {
   const { result } = renderHook(() =>
     React.useReducer(reducer, {
+      username: keywords.userName,
       users: {},
       thefts: [],
     })
